@@ -1,5 +1,10 @@
+#include <iostream>
 #include <GLFW/glfw3.h>
-#include <stdio.h>
+
+#include "eventsUtility.hpp"
+
+static const int width = 800;
+static const int height = 600;
 
 int main()
 {
@@ -9,11 +14,13 @@ int main()
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow* window = glfwCreateWindow(800, 600, "Physics Predictor", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(width, height, "Physics Predictor", NULL, NULL);
 
   glfwMakeContextCurrent(window);
+  glfwSetKeyCallback(window, keyCallback);
 
-  bool running = true;
+  bool fullscreen = false;
+  glfwSetWindowUserPointer(window, &fullscreen);
 
   while (!glfwWindowShouldClose(window)) {
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
