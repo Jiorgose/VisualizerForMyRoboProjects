@@ -62,6 +62,9 @@ void uiUpdate(int& fps, double dt, GLuint textureId)
     width = height * aspectRatio;
   }
 
+  width = floor(width);
+  height = floor(height);
+
   ImGui::Image((ImTextureID)(intptr_t)textureId, ImVec2(width, height), ImVec2(0, 1), ImVec2(1, 0));
   ImGui::End();
 
