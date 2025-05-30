@@ -25,6 +25,9 @@
     <Filter Include="Source Files\utility">
       <UniqueIdentifier>{620fc3b8-1726-4b1d-8f06-20e1053f99da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\glad">
+      <UniqueIdentifier>{22acfb4d-1d54-4cfe-8755-5ac26d0f7e23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -52,6 +55,18 @@
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
     <ClCompile Include="events.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ui.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dependencies\glad\glad.c">
+      <Filter>Source Files\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="render.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,6 +99,15 @@
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
     <ClInclude Include="events.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="window.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="render.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>

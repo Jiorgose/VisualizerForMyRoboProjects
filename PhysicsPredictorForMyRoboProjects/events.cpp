@@ -1,6 +1,3 @@
-#include <GLFW/glfw3.h>
-#include <iostream>
-
 #include "events.hpp"
 
 static int x, y, width, height;

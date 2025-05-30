@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Dependencies\glad\glad.c" />
     <ClCompile Include="..\Dependencies\imgui\imgui.cpp" />
     <ClCompile Include="..\Dependencies\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\Dependencies\imgui\imgui_draw.cpp" />
@@ -160,6 +161,9 @@
     <ClCompile Include="..\Dependencies\imgui\imgui_widgets.cpp" />
     <ClCompile Include="events.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="render.cpp" />
+    <ClCompile Include="ui.cpp" />
+    <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Dependencies\imgui\imconfig.h" />
@@ -172,6 +176,9 @@
     <ClInclude Include="..\Dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Dependencies\imgui\imstb_truetype.h" />
     <ClInclude Include="events.hpp" />
+    <ClInclude Include="render.hpp" />
+    <ClInclude Include="ui.hpp" />
+    <ClInclude Include="window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
