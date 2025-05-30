@@ -7,7 +7,7 @@ void uiNewFrame()
   ImGui::NewFrame();
 }
 
-void uiUpdate(int& fps, double dt, int width, int height, GLuint textureId)
+void uiUpdate(int& fps, double dt, GLuint textureId)
 {
   static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
 
@@ -49,6 +49,19 @@ void uiUpdate(int& fps, double dt, int width, int height, GLuint textureId)
   ImGui::End();
 
   ImGui::Begin("Scene");
+  ImVec2 availSize = ImGui::GetContentRegionAvail();
+  float availWidth = availSize.x;
+  float availHeight = availSize.y;
+
+  float aspectRatio = 4.0f / 3.0f;
+  float width = availWidth;
+  float height = width / aspectRatio;
+
+  if (height > availHeight) {
+    height = availHeight;
+    width = height * aspectRatio;
+  }
+
   ImGui::Image((ImTextureID)(intptr_t)textureId, ImVec2(width, height), ImVec2(0, 1), ImVec2(1, 0));
   ImGui::End();
 
