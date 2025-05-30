@@ -160,6 +160,7 @@
     <ClCompile Include="..\Dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\Dependencies\imgui\imgui_widgets.cpp" />
     <ClCompile Include="events.cpp" />
+    <ClCompile Include="load.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="ui.cpp" />
@@ -176,9 +177,14 @@
     <ClInclude Include="..\Dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Dependencies\imgui\imstb_truetype.h" />
     <ClInclude Include="events.hpp" />
+    <ClInclude Include="load.hpp" />
     <ClInclude Include="render.hpp" />
     <ClInclude Include="ui.hpp" />
     <ClInclude Include="window.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\x64\shaders\fragment.glsl" />
+    <None Include="..\x64\shaders\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

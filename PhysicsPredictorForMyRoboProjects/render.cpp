@@ -25,9 +25,9 @@ void render(double t, int width, int height, GLuint shader, GLuint textureId, GL
 void create_triangle(GLuint& VAO, GLuint& VBO)
 {
   GLfloat vertices[] = {
-    -1.0f, -1.0f, 0.0f,  // 1. vertex x, y, z
-    1.0f,  -1.0f, 0.0f,  // 2. vertex ...
-    0.0f,  1.0f,  0.0f   // etc...
+    -1.0f, -1.0f, 0.0f,
+    1.0f,  -1.0f, 0.0f,
+    0.0f,  1.0f,  0.0f
   };
 
   glGenVertexArrays(1, &VAO);

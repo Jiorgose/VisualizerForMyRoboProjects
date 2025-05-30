@@ -7,6 +7,7 @@
 #include "ui.hpp"
 #include "window.hpp"
 #include "render.hpp"
+#include "load.hpp"
 
 double t = 0;
 double dt = 0;
@@ -25,29 +26,7 @@ GLuint textureId;
 
 GLuint shader;
 
-const char* vertexShaderCode = R"*(
-#version 330
-
-layout (location = 0) in vec3 pos;
-
-void main()
-{
-	gl_Position = vec4(0.9*pos.x, 0.9*pos.y, 0.5*pos.z, 1.0);
-}
-)*";
-
-const char* fragmentShaderCode = R"*(
-#version 330
-
-out vec4 color;
-
-void main()
-{
-	color = vec4(0.0, 1.0, 0.0, 1.0);
-}
-)*";
-
-int main()
+int main(int argc, char* argv[])
 {
   GLFWwindow* window = createWindow(width, height, "lil render");
   glfwSetKeyCallback(window, keyCallback);
@@ -56,6 +35,12 @@ int main()
 
   bool fullscreen = false;
   glfwSetWindowUserPointer(window, &fullscreen);
+
+  std::string vertexShaderCodeStr = loadShaderSource("../Shaders/vertex.glsl");
+  const char* vertexShaderCode = vertexShaderCodeStr.c_str();
+
+  std::string fragmentShaderCodeStr = loadShaderSource("../Shaders/fragment.glsl");
+  const char* fragmentShaderCode = fragmentShaderCodeStr.c_str();
 
   create_triangle(VAO, VBO);
   create_shaders(shader, vertexShaderCode, fragmentShaderCode);
@@ -73,7 +58,7 @@ int main()
     //fixed framerate
     if ((t - frameTime) >= (1.0 / (double)fps)) {
       uiNewFrame();
-      render(t, width, height, shader, textureId, RBO, FBO, VAO);
+      render(t, width * 2, height * 2, shader, textureId, RBO, FBO, VAO);
       uiUpdate(fps, dt, textureId);
       
       uiRender();

@@ -28,6 +28,9 @@
     <Filter Include="Source Files\glad">
       <UniqueIdentifier>{22acfb4d-1d54-4cfe-8755-5ac26d0f7e23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\shaders">
+      <UniqueIdentifier>{3b732a2d-1067-400f-b90f-bf6ff7a0df3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -67,6 +70,9 @@
       <Filter>Source Files\glad</Filter>
     </ClCompile>
     <ClCompile Include="render.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="load.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,5 +116,16 @@
     <ClInclude Include="render.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="load.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\x64\shaders\fragment.glsl">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="..\x64\shaders\vertex.glsl">
+      <Filter>Source Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
