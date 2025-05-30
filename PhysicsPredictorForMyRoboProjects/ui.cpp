@@ -7,12 +7,13 @@ void uiNewFrame()
   ImGui::NewFrame();
 }
 
-void uiUpdate(int& fps, double dt)
+void uiUpdate(int& fps, double dt, int width, int height, GLuint textureId)
 {
   ImGui::Begin("test");
   ImGui::Text("Hoi :)");
   ImGui::SliderInt("fps", &fps, 1, 120, nullptr, 0);
   ImGui::Value("fps", static_cast<float>(1.0 / dt));
+  ImGui::Image((ImTextureID)(intptr_t)textureId, ImVec2(width, height), ImVec2(0, 1), ImVec2(1, 0));
   ImGui::End();
 }
 

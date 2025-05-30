@@ -1,12 +1,16 @@
 #include "render.hpp"
 
-void render(double t, GLuint VAO, GLuint shader)
+void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO)
 {
-  const float red = (float)(0.5 + 0.5 * sin(t));
-  const float green = (float)(0.5 + 0.5 * sin(t + pi * 2 / 3));
-  const float blue = (float)(0.5 + 0.5 * sin(t + pi * 4 / 3));
+  glClearColor(0.0, 0.0, 0.0, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT);
 
-  glClearColor(red, green, blue, 1.0);
+  rescale_framebuffer(width, height, textureId, RBO);
+  glViewport(0, 0, width, height);
+
+  bind_framebuffer(FBO);
+
+  glClearColor(1.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   glUseProgram(shader);
@@ -14,6 +18,8 @@ void render(double t, GLuint VAO, GLuint shader)
   glDrawArrays(GL_TRIANGLES, 0, 3);
   glBindVertexArray(0);
   glUseProgram(0);
+
+  unbind_framebuffer();
 }
 
 void create_triangle(GLuint& VAO, GLuint& VBO)
@@ -95,7 +101,7 @@ void create_shaders(GLuint& shader, const char* vertex_shader_code, const char* 
   }
 }
 
-void create_framebuffer(int WIDTH, int HEIGHT, GLuint texture_id, GLuint FBO, GLuint RBO)
+void create_framebuffer(int WIDTH, int HEIGHT, GLuint& texture_id, GLuint& FBO, GLuint& RBO)
 {
   glGenFramebuffers(1, &FBO);
   glBindFramebuffer(GL_FRAMEBUFFER, FBO);
