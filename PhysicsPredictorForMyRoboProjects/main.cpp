@@ -71,11 +71,16 @@ int main(int argc, char* argv[])
 
   uiDestroy();
 
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
+  glDeleteProgram(shader);
+
   glDeleteFramebuffers(1, &FBO);
   glDeleteTextures(1, &textureId);
   glDeleteRenderbuffers(1, &RBO);
 
   glfwDestroyWindow(window);
   glfwTerminate();
+
   return 0;
 }
