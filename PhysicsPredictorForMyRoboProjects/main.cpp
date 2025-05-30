@@ -8,8 +8,6 @@
 #include "window.hpp"
 #include "render.hpp"
 
-static const double pi = 2 * acos(0.0);
-
 double t = 0;
 double dt = 0;
 double frameTime = 0;
@@ -18,6 +16,36 @@ double updateTime = 0;
 int fps = 60;
 static const int width = 800;
 static const int height = 600;
+
+GLuint VAO;
+GLuint VBO;
+GLuint FBO;
+GLuint RBO;
+GLuint textureId;
+
+GLuint shader;
+
+const char* vertexShaderCode = R"*(
+#version 330
+
+layout (location = 0) in vec3 pos;
+
+void main()
+{
+	gl_Position = vec4(0.9*pos.x, 0.9*pos.y, 0.5*pos.z, 1.0);
+}
+)*";
+
+const char* fragmentShaderCode = R"*(
+#version 330
+
+out vec4 color;
+
+void main()
+{
+	color = vec4(0.0, 1.0, 0.0, 1.0);
+}
+)*";
 
 int main()
 {
@@ -28,6 +56,9 @@ int main()
 
   bool fullscreen = false;
   glfwSetWindowUserPointer(window, &fullscreen);
+
+  create_triangle(VAO, VBO);
+  create_shaders(shader, vertexShaderCode, fragmentShaderCode);
 
   while (!glfwWindowShouldClose(window)) {
     //time stuff :)
@@ -43,7 +74,7 @@ int main()
       uiNewFrame();
       uiUpdate(fps, dt);
 
-      render(t, pi);
+      render(t, VAO, shader);
       
       uiRender();
 
@@ -54,6 +85,10 @@ int main()
   }
 
   uiDestroy();
+
+  glDeleteFramebuffers(1, &FBO);
+  glDeleteTextures(1, &textureId);
+  glDeleteRenderbuffers(1, &RBO);
 
   glfwDestroyWindow(window);
   glfwTerminate();
