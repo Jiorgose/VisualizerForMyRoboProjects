@@ -7,11 +7,12 @@ void uiNewFrame()
   ImGui::NewFrame();
 }
 
-void uiUpdate(int& fps)
+void uiUpdate(int& fps, double dt)
 {
   ImGui::Begin("test");
   ImGui::Text("Hoi :)");
   ImGui::SliderInt("fps", &fps, 1, 120, nullptr, 0);
+  ImGui::Value("fps", static_cast<float>(1.0 / dt));
   ImGui::End();
 }
 

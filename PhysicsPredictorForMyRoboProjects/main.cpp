@@ -11,7 +11,7 @@
 static const double pi = 2 * acos(0.0);
 
 double t = 0;
-double dT = 0;
+double dt = 0;
 double frameTime = 0;
 double updateTime = 0;
 
@@ -32,7 +32,7 @@ int main()
   while (!glfwWindowShouldClose(window)) {
     //time stuff :)
     t = glfwGetTime();
-    dT = t - updateTime;
+    dt = t - frameTime;
     updateTime = t;
 
     //Input
@@ -41,7 +41,7 @@ int main()
     //fixed framerate
     if ((t - frameTime) >= (1.0 / (double)fps)) {
       uiNewFrame();
-      uiUpdate(fps);
+      uiUpdate(fps, dt);
 
       render(t, pi);
       

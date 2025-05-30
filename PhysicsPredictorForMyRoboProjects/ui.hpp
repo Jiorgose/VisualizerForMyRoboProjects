@@ -5,7 +5,7 @@
 
 void uiNewFrame();
 
-void uiUpdate(int& fps);
+void uiUpdate(int& fps, double dt);
 
 void uiRender();
 
