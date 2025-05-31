@@ -8,7 +8,7 @@
 
 void uiNewFrame();
 
-void uiUpdate(int& fps, double dt, GLuint textureId);
+void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader);
 
 void uiRender();
 

@@ -1,5 +1,7 @@
 #version 460
 
+uniform vec3 sColor;
+
 in vec2 UV;
 out vec4 color;
 
@@ -42,7 +44,7 @@ void main() {
         vec3 position = rayOrigin + rayDirection * t;
         float dist = scene(position);
         if (dist < 0.001) {
-            color = vec4(1.0, 0.0, 0.0, 1.0);
+            color = vec4(sColor, 1.0);
             return;
         }
         t += dist;

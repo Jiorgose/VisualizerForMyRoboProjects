@@ -59,8 +59,8 @@ int main(int argc, char* argv[])
     if ((t - frameTime) >= (1.0 / (double)fps)) {
       uiNewFrame();
       render(t, width * 2, height * 2, shader, textureId, RBO, FBO, VAO);
-      uiUpdate(fps, dt, textureId);
-      
+      uiUpdate(fps, dt, textureId, shader);
+
       uiRender();
 
       glfwSwapBuffers(window);

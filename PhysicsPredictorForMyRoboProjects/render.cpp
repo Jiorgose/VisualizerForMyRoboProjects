@@ -13,7 +13,12 @@ void render(double t, int width, int height, GLuint shader, GLuint textureId, GL
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
+  GLint colorLocation = glGetUniformLocation(shader, "sColor");
+
   glUseProgram(shader);
+
+  glUniform3f(colorLocation, 1.0f, 1.0f, 0.0f);
+
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
   glBindVertexArray(0);
@@ -122,7 +127,7 @@ void create_framebuffer(int WIDTH, int HEIGHT, GLuint& texture_id, GLuint& FBO, 
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-  std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!\n";
+    std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!\n";
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
