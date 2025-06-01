@@ -12,12 +12,6 @@
 
 AppState state;
 
-double t = 0;
-double dt = 0;
-double frameTime = 0;
-double updateTime = 0;
-
-int fps = 60;
 static const int width = 800;
 static const int height = 600;
 
@@ -46,28 +40,28 @@ int main(int argc, char* argv[])
 
   create_triangle(VAO, VBO);
   create_shaders(shader, vertexShaderCode, fragmentShaderCode);
-  create_framebuffer(state.renderWidth, state.renderHeight, textureId, FBO, RBO);
+  create_framebuffer(state.renderWidth, state.renderHeight, textureId, FBO, RBO, &state);
 
   while (!glfwWindowShouldClose(window)) {
     //time stuff :)
-    t = glfwGetTime();
-    dt = t - frameTime;
-    updateTime = t;
+    state.t = glfwGetTime();
+    state.dt = state.t - state.frameTime;
+    state.updateTime = state.t;
 
     //Input
     glfwPollEvents();
 
     //fixed framerate
-    if ((t - frameTime) >= (1.0 / (double)fps)) {
+    if ((state.t - state.frameTime) >= (1.0 / (double)state.fps)) {
       uiNewFrame();
-      render(t, shader, textureId, RBO, FBO, VAO, window);
-      uiUpdate(fps, dt, textureId, shader, window);
+      render(shader, textureId, RBO, FBO, VAO, window);
+      uiUpdate(textureId, shader, window);
 
       uiRender();
 
       glfwSwapBuffers(window);
 
-      frameTime = t;
+      state.frameTime = state.t;
     }
   }
 
