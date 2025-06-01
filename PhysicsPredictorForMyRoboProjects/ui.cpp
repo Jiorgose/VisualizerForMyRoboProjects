@@ -52,22 +52,11 @@ void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader, GLFW
 
   ImGui::Begin("Scene");
   ImVec2 availSize = ImGui::GetContentRegionAvail();
-  float availWidth = availSize.x;
-  float availHeight = availSize.y;
+  
+  state->renderWidth = availSize.x;
+  state->renderHeight = availSize.y;
 
-  float aspectRatio = 4.0f / 3.0f;
-  float width = availWidth;
-  float height = width / aspectRatio;
-
-  if (height > availHeight) {
-    height = availHeight;
-    width = height * aspectRatio;
-  }
-
-  width = floor(width);
-  height = floor(height);
-
-  ImGui::Image((ImTextureID)(intptr_t)textureId, ImVec2(width, height), ImVec2(0, 1), ImVec2(1, 0));
+  ImGui::Image((ImTextureID)(intptr_t)textureId, availSize, ImVec2(0, 1), ImVec2(1, 0));
   ImGui::End();
 
   ImGui::Begin("Settings");

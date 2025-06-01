@@ -7,12 +7,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 {
   AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
 
-  bool fullscreen = state->fullscreen;
-
   if (key == GLFW_KEY_F4 && action == GLFW_PRESS) {
-    fullscreen = !fullscreen;
+    state->fullscreen = !state->fullscreen;
     
-    if (fullscreen) {
+    if (state->fullscreen) {
       glfwGetWindowPos(window, &x, &y);
       glfwGetWindowSize(window, &width, &height);
 
@@ -26,8 +24,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
   }
   
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-    fullscreen = !fullscreen;
-    if (!fullscreen) {
+    state->fullscreen = !state->fullscreen;
+    if (!state->fullscreen) {
       glfwSetWindowMonitor(window, nullptr, x, y, width, height, 0);
     }
   }

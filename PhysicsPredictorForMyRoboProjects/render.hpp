@@ -8,7 +8,7 @@
 
 static const double pi = 2 * acos(0.0);
 
-void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, GLFWwindow* window);
+void render(double t, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, GLFWwindow* window);
 
 void create_triangle(GLuint& VAO, GLuint& VBO);
 
@@ -18,4 +18,4 @@ void create_shaders(GLuint& shader, const char* vertex_shader_code, const char* 
 void create_framebuffer(int WIDTH, int HEIGHT, GLuint& texture_id, GLuint& FBO, GLuint& RBO);
 void bind_framebuffer(GLuint FBO);
 void unbind_framebuffer();
-void rescale_framebuffer(int width, int height, GLuint texture_id, GLuint RBO);
+void rescale_framebuffer(int width, int height, GLuint texture_id, GLuint RBO, GLuint FBO);

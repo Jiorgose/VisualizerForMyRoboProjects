@@ -1,14 +1,20 @@
 #include "render.hpp"
 
-void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, GLFWwindow* window)
+static int lastWidth = 0, lastHeight = 0;
+
+void render(double t, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, GLFWwindow* window)
 {
   AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
 
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  rescale_framebuffer(width, height, textureId, RBO);
-  glViewport(0, 0, width, height);
+  if (state->renderWidth != lastWidth || state->renderHeight != lastHeight) {
+    rescale_framebuffer(state->renderWidth, state->renderHeight, textureId, RBO, FBO);
+    lastWidth = state->renderWidth;
+    lastHeight = state->renderHeight;
+  }
+  glViewport(0, 0, state->renderWidth, state->renderHeight);
 
   bind_framebuffer(FBO);
 
@@ -17,12 +23,14 @@ void render(double t, int width, int height, GLuint shader, GLuint textureId, GL
 
   GLint timeLocation = glGetUniformLocation(shader, "time");
   GLint colorLocation = glGetUniformLocation(shader, "sColor");
+  GLint aspectRatioLocation = glGetUniformLocation(shader, "aspectRatio");
   GLint cameraPositionLocation = glGetUniformLocation(shader, "cameraPosition");
 
   glUseProgram(shader);
 
   glUniform3f(colorLocation, state->color[0], state->color[1], state->color[2]);
   glUniform1f(timeLocation, glfwGetTime());
+  glUniform1f(aspectRatioLocation, (state->renderWidth / state->renderHeight));
   glUniform3f(cameraPositionLocation, state->cameraPosition[0], state->cameraPosition[1], state->cameraPosition[2]);
 
   glBindVertexArray(VAO);
@@ -150,8 +158,10 @@ void unbind_framebuffer()
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void rescale_framebuffer(int width, int height, GLuint texture_id, GLuint RBO)
+void rescale_framebuffer(int width, int height, GLuint texture_id, GLuint RBO, GLuint FBO)
 {
+  glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
   glBindTexture(GL_TEXTURE_2D, texture_id);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -161,4 +171,6 @@ void rescale_framebuffer(int width, int height, GLuint texture_id, GLuint RBO)
   glBindRenderbuffer(GL_RENDERBUFFER, RBO);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

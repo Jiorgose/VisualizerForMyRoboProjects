@@ -2,6 +2,7 @@
 
 uniform float time;
 uniform vec3 sColor;
+uniform float aspectRatio;
 
 uniform vec3 cameraPosition;
 
@@ -27,7 +28,7 @@ Sphere spheres[sphereCount];
 
 vec3 getRayDir(vec2 uv) {
   vec2 p = uv * 2.0 - 1.0;
-  p.x *= 4.0 / 3.0;
+  p.x *= aspectRatio;
   return normalize(vec3(p, 1.0));
 }
 

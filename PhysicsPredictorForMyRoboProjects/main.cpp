@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
   create_triangle(VAO, VBO);
   create_shaders(shader, vertexShaderCode, fragmentShaderCode);
-  create_framebuffer(width, height, textureId, FBO, RBO);
+  create_framebuffer(state.renderWidth, state.renderHeight, textureId, FBO, RBO);
 
   while (!glfwWindowShouldClose(window)) {
     //time stuff :)
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     //fixed framerate
     if ((t - frameTime) >= (1.0 / (double)fps)) {
       uiNewFrame();
-      render(t, width * 2, height * 2, shader, textureId, RBO, FBO, VAO, window);
+      render(t, shader, textureId, RBO, FBO, VAO, window);
       uiUpdate(fps, dt, textureId, shader, window);
 
       uiRender();
