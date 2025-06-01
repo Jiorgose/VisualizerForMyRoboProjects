@@ -45,24 +45,28 @@ float scene(vec3 p) {
   return minDist;
 }
 
-bool calculateLight(vec3 position, Sun sun) {
-  Ray ray;
-  vec3 origin = position + sun.direction * 0.5;
-  ray.direction = sun.direction;
-
-  float t = 0.0;
-  for (int i = 0; i < 250; ++i) {
-    ray.position = origin + ray.direction * t;
-    float dist = scene(ray.position);
-    if (dist < 0.001) {
-      return false;
-    }
-    t += dist;
-    if (t > 250.0) break;
-  }
-
-  return true;
+vec3 calculateNormal(vec3 p) {
+  float h = 0.001;
+  return normalize(vec3(
+    scene(p + vec3(h, 0, 0)) - scene(p - vec3(h, 0, 0)),
+    scene(p + vec3(0, h, 0)) - scene(p - vec3(0, h, 0)),
+    scene(p + vec3(0, 0, h)) - scene(p - vec3(0, 0, h))
+  ));
 }
+
+float calculateLight(in vec3 ro, in vec3 rd, float mint, float maxt, float w) {
+    float res = 1.0;
+    float t = mint;
+    for (int i = 0; i < 256 && t < maxt; i++) {
+        float h = scene(ro + t * rd);
+        res = min(res, h / (w * t));
+        t += clamp(h, 0.005, 0.50);
+        if (res < -1.0) break;
+    }
+    res = max(res, -1.0);
+    return 0.25 * (1.0 + res) * (1.0 + res) * (2.0 - res);
+}
+
 
 void main() {
   spheres[0] = Sphere(vec3(0.0, 1.0, 0.0), 0.5);
@@ -78,22 +82,22 @@ void main() {
   ray.direction = getRayDir(UV);
 
   float t = 0.0;
-  for (int i = 0; i < 100; ++i) {
+  for (int i = 0; i < 256; ++i) {
     ray.position = origin + ray.direction * t;
     float dist = scene(ray.position);
-    if (dist < 0.001) {
-      bool inSun = calculateLight(ray.position, sun);
-      if (inSun) {
-        color = vec4(sColor, 1.0);
-        return;
-      }
-      else {
-        color = vec4(0.05, 0.05, 0.1, 1.0);
-        return;
-      }
+    if (dist < 0.0001) {
+      float shadow = calculateLight(ray.position + 0.05 * sun.direction, sun.direction, 0.05, 250.0, 0.5);
+
+      vec3 litColor = sColor;
+      vec3 shadowColor = vec3(0.05, 0.05, 0.1);
+    
+      vec3 finalColor = mix(shadowColor, litColor, shadow);
+      color = vec4(finalColor, 1.0);
+      return;
     }
+
     t += dist;
-    if (t > 100.0) break;
+    if (t > 256.0) break;
   }
 
   double imguiColor = 15.0 / 255.0;

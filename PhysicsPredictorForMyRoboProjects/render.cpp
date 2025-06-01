@@ -131,7 +131,6 @@ void create_framebuffer(int WIDTH, int HEIGHT, GLuint& texture_id, GLuint& FBO, 
 
   glGenTextures(1, &texture_id);
   glBindTexture(GL_TEXTURE_2D, texture_id);
-  glTexImage2DMultisample(GL_TEXTURE_2D, 2, GL_RGB, state->renderWidth, state->renderHeight, GL_TRUE);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
