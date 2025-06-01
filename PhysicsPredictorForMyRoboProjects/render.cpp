@@ -1,7 +1,9 @@
 #include "render.hpp"
 
-void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, variables& vars)
+void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, GLFWwindow* window)
 {
+  AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
+
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -19,9 +21,9 @@ void render(double t, int width, int height, GLuint shader, GLuint textureId, GL
 
   glUseProgram(shader);
 
-  glUniform3f(colorLocation, vars.color[0], vars.color[1], vars.color[2]);
+  glUniform3f(colorLocation, state->color[0], state->color[1], state->color[2]);
   glUniform1f(timeLocation, glfwGetTime());
-  glUniform3f(cameraPositionLocation, vars.cameraPosition[0], vars.cameraPosition[1], vars.cameraPosition[2]);
+  glUniform3f(cameraPositionLocation, state->cameraPosition[0], state->cameraPosition[1], state->cameraPosition[2]);
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

@@ -10,7 +10,7 @@
 #include "render.hpp"
 #include "load.hpp"
 
-variables vars;
+AppState state;
 
 double t = 0;
 double dt = 0;
@@ -36,8 +36,7 @@ int main(int argc, char* argv[])
 
   uiInit(window);
 
-  bool fullscreen = false;
-  glfwSetWindowUserPointer(window, &fullscreen);
+  glfwSetWindowUserPointer(window, &state);
 
   std::string vertexShaderCodeStr = loadShaderSource("../Shaders/vertex.glsl");
   const char* vertexShaderCode = vertexShaderCodeStr.c_str();
@@ -61,8 +60,8 @@ int main(int argc, char* argv[])
     //fixed framerate
     if ((t - frameTime) >= (1.0 / (double)fps)) {
       uiNewFrame();
-      render(t, width * 2, height * 2, shader, textureId, RBO, FBO, VAO, vars);
-      uiUpdate(fps, dt, textureId, shader, vars);
+      render(t, width * 2, height * 2, shader, textureId, RBO, FBO, VAO, window);
+      uiUpdate(fps, dt, textureId, shader, window);
 
       uiRender();
 

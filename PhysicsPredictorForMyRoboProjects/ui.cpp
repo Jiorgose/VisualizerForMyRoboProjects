@@ -7,8 +7,10 @@ void uiNewFrame()
   ImGui::NewFrame();
 }
 
-void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader, variables& vars)
+void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 {
+  AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
+
   static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
 
   ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking;
@@ -71,8 +73,8 @@ void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader, vari
   ImGui::Begin("Settings");
   ImGui::SliderInt("fps", &fps, 1, 120, nullptr, 0);
   ImGui::Value("fps", static_cast<float>(1.0 / dt));
-  ImGui::ColorEdit3("color", vars.color, 0);
-  ImGui::DragFloat3("position", vars.cameraPosition, 0);
+  ImGui::ColorEdit3("color", state->color, 0);
+  ImGui::DragFloat3("position", state->cameraPosition, 0);
   ImGui::End();
 }
 

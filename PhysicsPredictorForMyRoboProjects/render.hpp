@@ -8,7 +8,7 @@
 
 static const double pi = 2 * acos(0.0);
 
-void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, variables& vars);
+void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, GLFWwindow* window);
 
 void create_triangle(GLuint& VAO, GLuint& VBO);
 
