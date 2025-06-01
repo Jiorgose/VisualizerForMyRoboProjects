@@ -14,6 +14,10 @@ struct Sphere {
   float radius;
 };
 
+struct Plane {
+  float height;
+};
+
 struct Ray {
   vec3 position;
   vec3 direction;
@@ -26,32 +30,35 @@ struct Sun {
 const int sphereCount = 2;
 Sphere spheres[sphereCount];
 
-vec3 getRayDir(vec2 uv) {
-  vec2 p = uv * 2.0 - 1.0;
-  p.x *= aspectRatio;
-  return normalize(vec3(p, 1.0));
+mat3 setCamera(vec3 ro, vec3 ta, float roll) {
+    vec3 cw = normalize(ta - ro);
+    vec3 cp = vec3(sin(roll), cos(roll), 0.0);
+    vec3 cu = normalize(cross(cw, cp));
+    vec3 cv = normalize(cross(cu, cw));
+    return mat3(cu, cv, cw);
 }
 
-float sdfSphere(vec3 p, Sphere s) {
+vec3 getRayDir(vec2 uv, vec3 forward, vec3 up, vec3 right, float fov) {
+  vec2 p = uv * 2.0 - 1.0;
+  float z = 1.0 / tan(radians(fov) * 0.5);
+  return normalize(p.x * right * aspectRatio + p.y * up + z * forward);
+}
+
+float sphere(vec3 p, Sphere s) {
   return length(p - s.center) - s.radius;
+}
+
+float plane(vec3 p, Plane plane) {
+  return p.y + plane.height;
 }
 
 float scene(vec3 p) {
   float minDist = 1e10;
   for (int i = 0; i < sphereCount; ++i) {
-    float d = sdfSphere(p, spheres[i]);
+    float d = sphere(p, spheres[i]);
     minDist = min(minDist, d);
   }
-  return minDist;
-}
-
-vec3 calculateNormal(vec3 p) {
-  float h = 0.001;
-  return normalize(vec3(
-    scene(p + vec3(h, 0, 0)) - scene(p - vec3(h, 0, 0)),
-    scene(p + vec3(0, h, 0)) - scene(p - vec3(0, h, 0)),
-    scene(p + vec3(0, 0, h)) - scene(p - vec3(0, 0, h))
-  ));
+  return min(minDist, plane(p, Plane(1.0)));
 }
 
 float calculateLight(in vec3 ro, in vec3 rd, float mint, float maxt, float w) {
@@ -73,20 +80,24 @@ void main() {
   spheres[1] = Sphere(vec3(0.0, 0.0, 0.0), 1.0);
 
   Sun sun;
-  float angle = time * 0.2;
-  sun.direction = normalize(vec3(cos(angle), 0.25, sin(angle)));
+  
+  //float angle = time * 0.2;
+  //sun.direction = normalize(vec3(cos(angle), 0.25, sin(angle)));
+  sun.direction = vec3(0.25, 0.25, 0.0);
 
   Ray ray;
 
   vec3 origin = cameraPosition;
-  ray.direction = getRayDir(UV);
+  mat3 camMat = setCamera(cameraPosition, vec3(0.0, 0.0, 0.0), 0.0);
+  ray.direction = getRayDir(UV, camMat[2], camMat[1], camMat[0], 90.0);
+
 
   float t = 0.0;
   for (int i = 0; i < 256; ++i) {
     ray.position = origin + ray.direction * t;
     float dist = scene(ray.position);
     if (dist < 0.0001) {
-      float shadow = calculateLight(ray.position + 0.05 * sun.direction, sun.direction, 0.05, 250.0, 0.5);
+      float shadow = calculateLight(ray.position + 0.05 * sun.direction, sun.direction, 0.05, 5.0, 0.25);
 
       vec3 litColor = sColor;
       vec3 shadowColor = vec3(0.05, 0.05, 0.1);
