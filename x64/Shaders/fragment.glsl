@@ -1,6 +1,9 @@
 #version 460
 
+uniform float time;
 uniform vec3 sColor;
+
+uniform vec3 cameraPosition;
 
 in vec2 UV;
 out vec4 color;
@@ -47,14 +50,14 @@ bool calculateLight(vec3 position, Sun sun) {
   ray.direction = sun.direction;
 
   float t = 0.0;
-  for (int i = 0; i < 100; ++i) {
+  for (int i = 0; i < 250; ++i) {
     ray.position = origin + ray.direction * t;
     float dist = scene(ray.position);
     if (dist < 0.001) {
       return false;
     }
     t += dist;
-    if (t > 100.0) break;
+    if (t > 250.0) break;
   }
 
   return true;
@@ -65,11 +68,12 @@ void main() {
   spheres[1] = Sphere(vec3(0.0, 0.0, 0.0), 1.0);
 
   Sun sun;
-  sun.direction = vec3(0.25, 0.25, 0.0);
+  float angle = time * 0.2;
+  sun.direction = normalize(vec3(cos(angle), 0.25, sin(angle)));
 
   Ray ray;
 
-  vec3 origin = vec3(0.0, 0.0, -3.0);
+  vec3 origin = cameraPosition;
   ray.direction = getRayDir(UV);
 
   float t = 0.0;
@@ -83,7 +87,7 @@ void main() {
         return;
       }
       else {
-        color = vec4(0.0, 0.0, 0.0, 0.0);
+        color = vec4(0.05, 0.05, 0.1, 1.0);
         return;
       }
     }
@@ -91,8 +95,7 @@ void main() {
     if (t > 100.0) break;
   }
 
-  float a = 0.5 * (ray.direction.y + 1.0);
-  vec3 skyColor = mix(vec3(1.0, 1.0, 1.0), vec3(0.5, 0.7, 1.0), a);
-  color = vec4(skyColor, 1.0);
+  double imguiColor = 15.0 / 255.0;
+  color = vec4(imguiColor, imguiColor, imguiColor, 1.0);
   return;
 }

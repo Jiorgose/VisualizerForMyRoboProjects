@@ -72,6 +72,7 @@ void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader, vari
   ImGui::SliderInt("fps", &fps, 1, 120, nullptr, 0);
   ImGui::Value("fps", static_cast<float>(1.0 / dt));
   ImGui::ColorEdit3("color", vars.color, 0);
+  ImGui::DragFloat3("position", vars.cameraPosition, 0);
   ImGui::End();
 }
 

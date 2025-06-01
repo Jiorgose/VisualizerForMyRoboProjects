@@ -13,11 +13,15 @@ void render(double t, int width, int height, GLuint shader, GLuint textureId, GL
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
+  GLint timeLocation = glGetUniformLocation(shader, "time");
   GLint colorLocation = glGetUniformLocation(shader, "sColor");
+  GLint cameraPositionLocation = glGetUniformLocation(shader, "cameraPosition");
 
   glUseProgram(shader);
 
   glUniform3f(colorLocation, vars.color[0], vars.color[1], vars.color[2]);
+  glUniform1f(timeLocation, glfwGetTime());
+  glUniform3f(cameraPositionLocation, vars.cameraPosition[0], vars.cameraPosition[1], vars.cameraPosition[2]);
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
