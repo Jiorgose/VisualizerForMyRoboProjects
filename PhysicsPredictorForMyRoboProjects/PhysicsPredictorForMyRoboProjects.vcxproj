@@ -176,6 +176,7 @@
     <ClInclude Include="..\Dependencies\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Dependencies\imgui\imstb_truetype.h" />
+    <ClInclude Include="common.hpp" />
     <ClInclude Include="events.hpp" />
     <ClInclude Include="load.hpp" />
     <ClInclude Include="render.hpp" />

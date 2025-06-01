@@ -1,6 +1,6 @@
 #include "render.hpp"
 
-void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO)
+void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, variables& vars)
 {
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -17,7 +17,7 @@ void render(double t, int width, int height, GLuint shader, GLuint textureId, GL
 
   glUseProgram(shader);
 
-  glUniform3f(colorLocation, 1.0f, 1.0f, 0.0f);
+  glUniform3f(colorLocation, vars.color[0], vars.color[1], vars.color[2]);
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

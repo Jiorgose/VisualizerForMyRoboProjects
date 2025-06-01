@@ -7,7 +7,7 @@ void uiNewFrame()
   ImGui::NewFrame();
 }
 
-void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader)
+void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader, variables& vars)
 {
   static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
 
@@ -71,6 +71,7 @@ void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader)
   ImGui::Begin("Settings");
   ImGui::SliderInt("fps", &fps, 1, 120, nullptr, 0);
   ImGui::Value("fps", static_cast<float>(1.0 / dt));
+  ImGui::ColorEdit3("color", vars.color, 0);
   ImGui::End();
 }
 

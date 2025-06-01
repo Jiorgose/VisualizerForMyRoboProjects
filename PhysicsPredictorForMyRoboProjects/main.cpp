@@ -3,11 +3,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "common.hpp"
 #include "events.hpp"
 #include "ui.hpp"
 #include "window.hpp"
 #include "render.hpp"
 #include "load.hpp"
+
+variables vars;
 
 double t = 0;
 double dt = 0;
@@ -58,8 +61,8 @@ int main(int argc, char* argv[])
     //fixed framerate
     if ((t - frameTime) >= (1.0 / (double)fps)) {
       uiNewFrame();
-      render(t, width * 2, height * 2, shader, textureId, RBO, FBO, VAO);
-      uiUpdate(fps, dt, textureId, shader);
+      render(t, width * 2, height * 2, shader, textureId, RBO, FBO, VAO, vars);
+      uiUpdate(fps, dt, textureId, shader, vars);
 
       uiRender();
 

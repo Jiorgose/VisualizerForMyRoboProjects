@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common.hpp"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
@@ -7,7 +8,7 @@
 
 static const double pi = 2 * acos(0.0);
 
-void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO);
+void render(double t, int width, int height, GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO, variables& vars);
 
 void create_triangle(GLuint& VAO, GLuint& VBO);
 

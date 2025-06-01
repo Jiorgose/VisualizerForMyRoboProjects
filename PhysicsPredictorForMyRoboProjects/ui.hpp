@@ -1,4 +1,5 @@
 #pragma once
+#include "common.hpp"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <imgui.h>
@@ -8,7 +9,7 @@
 
 void uiNewFrame();
 
-void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader);
+void uiUpdate(int& fps, double dt, GLuint textureId, GLuint fragmentShader, variables& vars);
 
 void uiRender();
 
