@@ -25,6 +25,12 @@ float sphereSDF(vec3 pos, Sphere sphere)
   return(length(pos - sphere.center) - sphere.radius);
 }
 
+float boxSDF(vec3 p, vec3 b)
+{
+  vec3 q = abs(p) - b;
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+}
+
 float planeSDF(vec3 pos, float h)
 {
   return pos.y + h;
@@ -34,8 +40,10 @@ float scene(vec3 pos) {
   Sphere sphere;
   sphere.radius = 1.0;
   sphere.center = vec3(sin(time) * 3.0, 0.0, 0.0);
+  
+  float objects = min(sphereSDF(pos, sphere), boxSDF(pos, vec3(.75)));
 
-  return min(sphereSDF(pos, sphere), planeSDF(pos, 1.0));
+  return min(objects, planeSDF(pos, 1.0));
 }
 
 vec3 getRayDir(vec2 uv) {
@@ -51,23 +59,21 @@ void main() {
   ray.direction = getRayDir(UV);
 
   vec3 col = vec3(0.0);
-
   float totalDistance = 0.0;
+  float dist = 0.0;
 
   //Raymarching
   for (int i = 0; i < 80; i++) {
     ray.position = ray.origin + ray.direction * totalDistance;
 
-    float dist = scene(ray.position);
+    dist = scene(ray.position);
 
     totalDistance += dist;
 
     if (dist < .001 || dist > 100.0) break;
   }
 
- col = vec3(totalDistance * 0.2);
+  col = vec3(totalDistance * 0.2);
 
   color = vec4(col, 1.0);
 }
-
-  //col = 15.0 / 255.0;
