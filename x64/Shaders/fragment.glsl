@@ -52,7 +52,7 @@ void main() {
 
     Sphere sphere;
     sphere.radius = 1.0;
-    sphere.center = vec3(0.0, 0.0, 0.0);
+    sphere.center = vec3(sin(time) * 3.0, 0.0, 0.0);
     float dist = sphereSDF(ray.position, sphere);
 
     totalDistance += dist;
