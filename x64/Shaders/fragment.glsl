@@ -27,7 +27,15 @@ float sphereSDF(vec3 pos, Sphere sphere)
 
 float planeSDF(vec3 pos, float h)
 {
-  return pos.z + h;
+  return pos.y + h;
+}
+
+float scene(vec3 pos) {
+  Sphere sphere;
+  sphere.radius = 1.0;
+  sphere.center = vec3(sin(time) * 3.0, 0.0, 0.0);
+
+  return min(sphereSDF(pos, sphere), planeSDF(pos, 1.0));
 }
 
 vec3 getRayDir(vec2 uv) {
@@ -50,10 +58,7 @@ void main() {
   for (int i = 0; i < 80; i++) {
     ray.position = ray.origin + ray.direction * totalDistance;
 
-    Sphere sphere;
-    sphere.radius = 1.0;
-    sphere.center = vec3(sin(time) * 3.0, 0.0, 0.0);
-    float dist = sphereSDF(ray.position, sphere);
+    float dist = scene(ray.position);
 
     totalDistance += dist;
 
