@@ -20,6 +20,12 @@ struct Sphere {
   vec3 center;
 };
 
+mat2 rot2D(float angle) {
+  float sine = sin(angle);
+  float cosine = cos(angle);
+  return mat2(cosine, -sine, sine, cosine);
+}
+
 float smin(float a, float b, float k) {
   float h = clamp(0.5 + 0.5*(a-b)/k, 0.0, 1.0);
   return mix(a, b, h) - k*h*(1.0-h);
@@ -38,16 +44,16 @@ float boxSDF(vec3 p, vec3 b)
 
 float planeSDF(vec3 p, vec2 size, float h)
 {
-    vec3 q = p - vec3(0.0, h, 0.0);
+  vec3 q = p - vec3(0.0, h, 0.0);
 
-    vec2 d = abs(q.xz) - size;
+  vec2 d = abs(q.xz) - size;
     
-    vec2 outside = max(d, vec2(0.0));
-    float horizDist = length(outside);
+  vec2 outside = max(d, vec2(0.0));
+  float horizDist = length(outside);
 
-    float vertDist = q.y;
+  float vertDist = q.y;
 
-    return length(vec2(horizDist, vertDist));
+  return length(vec2(horizDist, vertDist));
 }
 
 
@@ -59,8 +65,19 @@ float scene(vec3 pos) {
   Sphere sphere2;
   sphere2.radius = 0.5;
   sphere2.center = vec3((sin(time) * 3.0) + (sin(time * 4) * 1.5), 0.0, 0.0);
-  
-  float objects = min(min(sphereSDF(pos, sphere), sphereSDF(pos, sphere2)), boxSDF(pos, vec3(0.75)));
+
+  float SDFsphere = sphereSDF(pos, sphere);
+  float SDFsphere2 = sphereSDF(pos, sphere2);
+
+  vec3 q = pos;
+
+  q.xy *= rot2D(time);
+  q.xz *= rot2D(time);
+  q.zy *= rot2D(time);
+
+  float SDFbox = boxSDF(q, vec3(0.75));
+
+  float objects = min(min(SDFsphere, SDFsphere2), SDFbox);
 
   return min(objects, planeSDF(pos, vec2(2.0, 2.0), -1.0));
 }
