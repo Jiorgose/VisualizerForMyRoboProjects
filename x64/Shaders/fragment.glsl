@@ -20,6 +20,11 @@ struct Sphere {
   vec3 center;
 };
 
+float smin(float a, float b, float k) {
+  float h = clamp(0.5 + 0.5*(a-b)/k, 0.0, 1.0);
+  return mix(a, b, h) - k*h*(1.0-h);
+}
+
 float sphereSDF(vec3 pos, Sphere sphere)
 {
   return(length(pos - sphere.center) - sphere.radius);
@@ -31,19 +36,33 @@ float boxSDF(vec3 p, vec3 b)
   return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
 
-float planeSDF(vec3 pos, float h)
+float planeSDF(vec3 p, vec2 size, float h)
 {
-  return pos.y + h;
+    vec3 q = p - vec3(0.0, h, 0.0);
+
+    vec2 d = abs(q.xz) - size;
+    
+    vec2 outside = max(d, vec2(0.0));
+    float horizDist = length(outside);
+
+    float vertDist = q.y;
+
+    return length(vec2(horizDist, vertDist));
 }
+
 
 float scene(vec3 pos) {
   Sphere sphere;
   sphere.radius = 1.0;
   sphere.center = vec3(sin(time) * 3.0, 0.0, 0.0);
-  
-  float objects = min(sphereSDF(pos, sphere), boxSDF(pos, vec3(.75)));
 
-  return min(objects, planeSDF(pos, 1.0));
+  Sphere sphere2;
+  sphere2.radius = 0.5;
+  sphere2.center = vec3((sin(time) * 3.0) + (sin(time * 4) * 1.5), 0.0, 0.0);
+  
+  float objects = min(min(sphereSDF(pos, sphere), sphereSDF(pos, sphere2)), boxSDF(pos, vec3(0.75)));
+
+  return min(objects, planeSDF(pos, vec2(2.0, 2.0), -1.0));
 }
 
 vec3 getRayDir(vec2 uv) {
@@ -69,6 +88,8 @@ void main() {
     dist = scene(ray.position);
 
     totalDistance += dist;
+
+    //col = vec3(i) / 80.0;
 
     if (dist < .001 || dist > 100.0) break;
   }
