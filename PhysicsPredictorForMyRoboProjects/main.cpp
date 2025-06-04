@@ -2,6 +2,8 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stg_image.h>
 
 #include "common.hpp"
 #include "events.hpp"
@@ -33,6 +35,18 @@ int main(int argc, char* argv[])
 
   glfwSetWindowUserPointer(window, &state);
 
+  //Set window Icon
+  int iconWidth, iconHeight;
+  int iconChannels;
+
+  unsigned char* icon = stbi_load("../Icon.png", &iconWidth, &iconHeight, &iconChannels, 4);
+  std::cout << icon << std::endl;
+  GLFWimage icons[1];
+  icons[0].width = iconWidth;
+  icons[0].height = iconHeight;
+  icons[0].pixels = icon;
+  glfwSetWindowIcon(window, 1, icons);
+
   std::string vertexShaderCodeStr = loadShaderSource("../Shaders/vertex.glsl");
   const char* vertexShaderCode = vertexShaderCodeStr.c_str();
 
@@ -50,7 +64,6 @@ int main(int argc, char* argv[])
     state.updateTime = state.t;
 
     //Input
-    glfwWaitEventsTimeout(0.01); // 10ms wait; small enough to stay responsive
     glfwPollEvents();
 
     //fixed framerate
