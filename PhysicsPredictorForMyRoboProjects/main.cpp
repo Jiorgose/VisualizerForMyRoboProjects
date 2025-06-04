@@ -2,8 +2,6 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stg_image.h>
 
 #include "common.hpp"
 #include "events.hpp"
@@ -39,7 +37,7 @@ int main(int argc, char* argv[])
   int iconWidth, iconHeight;
   int iconChannels;
 
-  unsigned char* icon = stbi_load("../Icon.png", &iconWidth, &iconHeight, &iconChannels, 4);
+  unsigned char* icon = loadIcon("../Icon.png", &iconWidth, &iconHeight, &iconChannels, 4);
   std::cout << icon << std::endl;
   GLFWimage icons[1];
   icons[0].width = iconWidth;
@@ -55,7 +53,7 @@ int main(int argc, char* argv[])
 
   create_triangle(VAO, VBO);
   create_shaders(shader, vertexShaderCode, fragmentShaderCode);
-  create_framebuffer(state.renderWidth, state.renderHeight, textureId, FBO, RBO, &state);
+  create_framebuffer(int(state.renderWidth), int(state.renderHeight), textureId, FBO, RBO, &state);
 
   while (!glfwWindowShouldClose(window)) {
     //time stuff :)
