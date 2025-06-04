@@ -100,7 +100,7 @@ float shadow(vec3 point, vec3 dir, float start, float end) {
   }
     
   shadow = max(shadow, -1.0);
-  return smoothstep(-1.0, 0.0, shadow * 0.85);
+  return smoothstep(-1.0, 0.0, shadow * 0.5);
 }
 
 float AO(vec3 point, vec3 dir, float start) {
@@ -148,7 +148,7 @@ void main() {
     if (dist < 0.001) {
       vec3 normal = calcNormal(ray.position);
       vec3 shadowStart = ray.position + normal * 0.001;
-      
+
       col = sColor * shadow(shadowStart, lightDir, 0.01, lightDist);
       col *= AO(ray.position, calcNormal(ray.position), 0.1);
     }
@@ -156,7 +156,10 @@ void main() {
     if (dist < .001 || dist > 100.0) break;
   }
 
-  col = pow(col, vec3(1.0 / 2.2)); // Apply gamma correction
+  col = pow(col, vec3(1.0 / 2.2));
+
+  float fog = 1.0 - exp(-totalDistance * 0.05);
+  col = mix(col, vec3(15.0 / 255.0), fog);
 
   if (dist > 0.001) {
     col = vec3(15.0 / 255.0);
