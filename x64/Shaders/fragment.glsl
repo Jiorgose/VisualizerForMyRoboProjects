@@ -82,6 +82,16 @@ float scene(vec3 pos) {
   return min(objects, planeSDF(pos, vec2(2.0, 2.0), -1.0));
 }
 
+vec3 calcNormal(vec3 p) { 
+  vec3 n = vec3(0.0);
+  for( int i=0; i<4; i++ )
+  {
+    vec3 e = 0.5773*(2.0*vec3((((i+3)>>1)&1),((i>>1)&1),(i&1))-1.0);
+    n += e*scene(p+0.0005*e).x;
+    }
+    return normalize(n);
+}
+
 vec3 getRayDir(vec2 uv) {
   vec2 p = uv * 2.0 - 1.0;
   p.x *= aspectRatio;
@@ -104,14 +114,24 @@ void main() {
 
     dist = scene(ray.position);
 
-    totalDistance += dist;
+    totalDistance += max(dist, 0.001);
 
     //col = vec3(i) / 80.0;
+    col = calcNormal(ray.position);
 
     if (dist < .001 || dist > 100.0) break;
   }
 
-  col = vec3(totalDistance * 0.2);
+  //if (dist < 0.001) {
+  //  col = vec3(1.0);
+  //}
+  //else {
+  //  col = vec3(0.0);
+  //}
+
+
+  //col = vec3(totalDistance * 0.2);
+  //col = pow(col, vec3(1.0 / 2.2)); // Apply gamma correction
 
   color = vec4(col, 1.0);
 }
