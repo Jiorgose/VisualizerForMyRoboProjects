@@ -26,11 +26,6 @@ mat2 rot2D(float angle) {
   return mat2(cosine, -sine, sine, cosine);
 }
 
-float smin(float a, float b, float k) {
-  float h = clamp(0.5 + 0.5*(a-b)/k, 0.0, 1.0);
-  return mix(a, b, h) - k*h*(1.0-h);
-}
-
 float sphereSDF(vec3 pos, Sphere sphere)
 {
   return(length(pos - sphere.center) - sphere.radius);
@@ -71,15 +66,15 @@ float scene(vec3 pos) {
 
   vec3 q = pos;
 
-  q.xy *= rot2D(time);
-  q.xz *= rot2D(time);
-  q.zy *= rot2D(time);
+  //q.xy *= rot2D(time);
+  //q.xz *= rot2D(time);
+  //q.zy *= rot2D(time);
 
-  float SDFbox = boxSDF(q, vec3(0.75));
+  float SDFbox = boxSDF(q, vec3(1.0));
 
   float objects = min(min(SDFsphere, SDFsphere2), SDFbox);
 
-  return min(objects, planeSDF(pos, vec2(2.0, 2.0), -1.0));
+  return min(objects, planeSDF(pos, vec2(5.0, 5.0), -1.0));
 }
 
 vec3 calcNormal(vec3 p) { 
@@ -90,6 +85,36 @@ vec3 calcNormal(vec3 p) {
     n += e*scene(p+0.0005*e).x;
     }
     return normalize(n);
+}
+
+float shadow(vec3 point, vec3 dir, float start, float end) {
+ 	float depth = start, dist;
+  float shadow = 1.0;
+  for(int i = 0; i < 256; ++i) {
+    dist = scene(point + depth*dir).x;
+    if(depth > end || shadow < -1.0)
+      break;
+        
+    shadow = min(shadow, 40.*dist/depth);
+    depth += clamp(dist, 0.005, 10.0);
+  }
+    
+  shadow = max(shadow, -1.0);
+  return smoothstep(-1.0, 0.0, shadow * 0.85);
+}
+
+float AO(vec3 point, vec3 dir, float start) {
+	float depth = start, dist;
+    float step = 0.05, falloff = 1.0;
+    float ao = 0.0;
+    for(int i = 0; i < 3; ++i) {
+        dist = scene(point + depth*dir).x;
+        ao += falloff*clamp(depth - dist, 0.0, 1.0);
+        depth += step;
+        falloff *= 0.9;
+    }
+    
+    return clamp(1.0 - 1.5*ao, 0.0, 1.0);
 }
 
 vec3 getRayDir(vec2 uv) {
@@ -109,29 +134,33 @@ void main() {
   float dist = 0.0;
 
   //Raymarching
-  for (int i = 0; i < 80; i++) {
+  for (int i = 0; i < 256; i++) {
     ray.position = ray.origin + ray.direction * totalDistance;
 
     dist = scene(ray.position);
 
     totalDistance += max(dist, 0.001);
 
-    //col = vec3(i) / 80.0;
-    col = calcNormal(ray.position);
+    vec3 lightDir = vec3(-20.0, 40.0, -20.0) - ray.position;
+    float lightDist = length(lightDir);
+    lightDir /= lightDist;
+
+    if (dist < 0.001) {
+      vec3 normal = calcNormal(ray.position);
+      vec3 shadowStart = ray.position + normal * 0.001;
+      
+      col = sColor * shadow(shadowStart, lightDir, 0.01, lightDist);
+      col *= AO(ray.position, calcNormal(ray.position), 0.1);
+    }
 
     if (dist < .001 || dist > 100.0) break;
   }
 
-  //if (dist < 0.001) {
-  //  col = vec3(1.0);
-  //}
-  //else {
-  //  col = vec3(0.0);
-  //}
+  col = pow(col, vec3(1.0 / 2.2)); // Apply gamma correction
 
-
-  //col = vec3(totalDistance * 0.2);
-  //col = pow(col, vec3(1.0 / 2.2)); // Apply gamma correction
+  if (dist > 0.001) {
+    col = vec3(15.0 / 255.0);
+  }
 
   color = vec4(col, 1.0);
 }
