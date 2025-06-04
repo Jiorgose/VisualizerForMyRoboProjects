@@ -64,13 +64,13 @@ float scene(vec3 pos) {
   float SDFsphere = sphereSDF(pos, sphere);
   float SDFsphere2 = sphereSDF(pos, sphere2);
 
-  vec3 q = pos;
+  vec3 q = fract(pos) - 0.5;
 
   //q.xy *= rot2D(time);
   //q.xz *= rot2D(time);
   //q.zy *= rot2D(time);
 
-  float SDFbox = boxSDF(q, vec3(1.0));
+  float SDFbox = boxSDF(pos, vec3(1.0));
 
   float objects = min(min(SDFsphere, SDFsphere2), SDFbox);
 
