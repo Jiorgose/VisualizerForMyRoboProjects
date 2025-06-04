@@ -27,6 +27,7 @@ int main(int argc, char* argv[])
 {
   GLFWwindow* window = createWindow(width, height, "lil render");
   glfwSetKeyCallback(window, keyCallback);
+  glfwSetCursorPosCallback(window, cursorPositionCallback);
 
   uiInit(window);
 
@@ -49,6 +50,7 @@ int main(int argc, char* argv[])
     state.updateTime = state.t;
 
     //Input
+    glfwWaitEventsTimeout(0.01); // 10ms wait; small enough to stay responsive
     glfwPollEvents();
 
     //fixed framerate

@@ -66,7 +66,7 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
     ImGui::Text("Behind on Fps!");
   }
   ImGui::ColorEdit3("color", state->color, 0);
-  ImGui::DragFloat3("position", state->cameraPosition, 0);
+  //ImGui::DragFloat3("position", state->cameraPosition, 0);
   ImGui::End();
 }
 

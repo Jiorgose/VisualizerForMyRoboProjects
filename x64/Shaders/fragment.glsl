@@ -2,9 +2,9 @@
 
 uniform float time;
 uniform vec3 sColor;
-uniform float aspectRatio;
+uniform vec2 resolution;
 
-uniform vec3 cameraPosition;
+uniform vec2 mousePosition;
 
 in vec2 UV;
 out vec4 color;
@@ -64,8 +64,6 @@ float scene(vec3 pos) {
   float SDFsphere = sphereSDF(pos, sphere);
   float SDFsphere2 = sphereSDF(pos, sphere2);
 
-  vec3 q = fract(pos) - 0.5;
-
   //q.xy *= rot2D(time);
   //q.xz *= rot2D(time);
   //q.zy *= rot2D(time);
@@ -100,7 +98,7 @@ float shadow(vec3 point, vec3 dir, float start, float end) {
   }
     
   shadow = max(shadow, -1.0);
-  return smoothstep(-1.0, 0.0, shadow * 0.5);
+  return smoothstep(-1.0, 0.0, shadow * 0.85);
 }
 
 float AO(vec3 point, vec3 dir, float start) {
@@ -119,15 +117,24 @@ float AO(vec3 point, vec3 dir, float start) {
 
 vec3 getRayDir(vec2 uv) {
   vec2 p = uv * 2.0 - 1.0;
-  p.x *= aspectRatio;
+  p.x *= resolution.x / resolution.y;
   return normalize(vec3(p, 1.0));
 }
 
 void main() {
   //Initialization
   Ray ray;
-  ray.origin = cameraPosition;
+  ray.origin = vec3(0.0, 0.0, -6.0);
   ray.direction = getRayDir(UV);
+
+  vec2 mousePos = (mousePosition * 2.0 - resolution) / resolution.y;
+  mousePos.y = clamp(float(mousePos.y), -0.8, 0.8);
+
+  ray.origin.yz *= rot2D(-mousePos.y * 2.0);
+  ray.direction.yz *= rot2D(-mousePos.y * 2.0);
+
+  ray.origin.xz *= rot2D(-mousePos.x * 2.0);
+  ray.direction.xz *= rot2D(-mousePos.x * 2.0);
 
   vec3 col = vec3(0.0);
   float totalDistance = 0.0;

@@ -11,5 +11,5 @@ struct AppState {
   float renderWidth = 100.0f;
   float renderHeight = 100.0f;
   float color[3] = { 1.0f, 0.0f, 0.0f };
-  float cameraPosition[3] = { 0.0f, 0.0f, -3.0f };
+  float mousePosition[2] = { 0.0f, 0.0f };
 };

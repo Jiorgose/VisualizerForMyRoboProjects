@@ -23,15 +23,15 @@ void render(GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO,
 
   GLint timeLocation = glGetUniformLocation(shader, "time");
   GLint colorLocation = glGetUniformLocation(shader, "sColor");
-  GLint aspectRatioLocation = glGetUniformLocation(shader, "aspectRatio");
-  GLint cameraPositionLocation = glGetUniformLocation(shader, "cameraPosition");
+  GLint resolutionLocation = glGetUniformLocation(shader, "resolution");
+  GLint mousePositionLocation = glGetUniformLocation(shader, "mousePosition");
 
   glUseProgram(shader);
 
   glUniform3f(colorLocation, state->color[0], state->color[1], state->color[2]);
   glUniform1f(timeLocation, glfwGetTime());
-  glUniform1f(aspectRatioLocation, (state->renderWidth / state->renderHeight));
-  glUniform3f(cameraPositionLocation, state->cameraPosition[0], state->cameraPosition[1], state->cameraPosition[2]);
+  glUniform2f(resolutionLocation, state->renderWidth, state->renderHeight);
+  glUniform2f(mousePositionLocation, state->mousePosition[0], state->mousePosition[1]);
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
