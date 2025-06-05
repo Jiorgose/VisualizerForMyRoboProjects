@@ -10,6 +10,8 @@
 #include "render.hpp"
 #include "load.hpp"
 
+double PI = 3.14159265359;
+
 AppState state;
 
 static const int width = 800;
@@ -76,8 +78,10 @@ int main(int argc, char* argv[])
 
       state.mousePosition[0] += state.velocityX;
       state.mousePosition[1] += state.velocityY;
+      double normalizedY = state.mousePosition[1] / state.renderHeight;
+      normalizedY = clamp(normalizedY, 0.1, 0.8);
+      state.mousePosition[1] = normalizedY * state.renderHeight;
 
-      //state.mousePosition[1] = clamp(state.mousePosition[1], -0.8, 0.8);
 
       uiNewFrame();
       render(shader, textureId, RBO, FBO, VAO, window);

@@ -32,7 +32,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
   }
 }
 
-static double mousePos[1];
+static double mousePos[2];
 
 void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -43,11 +43,9 @@ void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
     mousePos[1] = ypos;
     return;
   }
-  //mousePos[0] = (mousePos[0] * 2.0 - width) / height;
-  //mousePos[1] = (mousePos[1] * 2.0 - height) / height;
 
-  state->velocityX = xpos - mousePos[0];
-  state->velocityY = ypos - mousePos[1];
+  state->velocityX = (xpos - mousePos[0]) * 10.0;
+  state->velocityY = (ypos - mousePos[1]) * 10.0;
 
   mousePos[0] = xpos;
   mousePos[1] = ypos;
