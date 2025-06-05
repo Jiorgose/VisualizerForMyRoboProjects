@@ -57,16 +57,18 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   state->renderHeight = availSize.y;
 
   ImGui::Image((ImTextureID)(intptr_t)textureId, availSize, ImVec2(0, 1), ImVec2(1, 0));
+
+  if (ImGui::IsWindowFocused()) {
+    state->isInScene = true;
+  }
+  else {
+    state->isInScene = false;
+  }
+
   ImGui::End();
 
   ImGui::Begin("Settings");
-  ImGui::SliderInt("fps", &state->fps, 1, 120, nullptr, 0);
-  ImGui::Value("fps", static_cast<int>(round(1.0 / state->dt)));
-  if (round(1.0 / state->dt) + 2 < state->fps) {
-    ImGui::Text("Behind on Fps!");
-  }
   ImGui::ColorEdit3("color", state->color, 0);
-  //ImGui::DragFloat3("position", state->cameraPosition, 0);
   ImGui::End();
 }
 

@@ -5,7 +5,11 @@ struct AppState {
   double dt = 0;
   double frameTime = 0;
   double updateTime = 0;
-  int fps = 60;
+  int fps = 30;
+
+  bool isInScene = false;
+  double velocityX = 0.0;
+  double velocityY = 0.0;
 
   bool fullscreen = false;
   float renderWidth = 100.0f;

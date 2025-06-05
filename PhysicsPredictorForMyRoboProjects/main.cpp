@@ -23,6 +23,11 @@ GLuint textureId;
 
 GLuint shader;
 
+const double clamp(const double& value, const double& low, const double& high)
+{
+  return (value < low) ? low : (high < value) ? high : value;
+}
+
 int main(int argc, char* argv[])
 {
   GLFWwindow* window = createWindow(width, height, "lil render");
@@ -66,6 +71,14 @@ int main(int argc, char* argv[])
 
     //fixed framerate
     if ((state.t - state.frameTime) >= (1.0 / (double)state.fps)) {
+      state.velocityX *= 0.9;
+      state.velocityY *= 0.9;
+
+      state.mousePosition[0] += state.velocityX;
+      state.mousePosition[1] += state.velocityY;
+
+      //state.mousePosition[1] = clamp(state.mousePosition[1], -0.8, 0.8);
+
       uiNewFrame();
       render(shader, textureId, RBO, FBO, VAO, window);
       uiUpdate(textureId, shader, window);

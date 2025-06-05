@@ -2,7 +2,6 @@
 
 static int x, y, width, height;
 
-
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
@@ -33,10 +32,23 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
   }
 }
 
+static double mousePos[1];
+
 void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
 {
   AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
 
-  state->mousePosition[0] = xpos;
-  state->mousePosition[1] = ypos;
+  if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE || !state->isInScene) {
+    mousePos[0] = xpos;
+    mousePos[1] = ypos;
+    return;
+  }
+  //mousePos[0] = (mousePos[0] * 2.0 - width) / height;
+  //mousePos[1] = (mousePos[1] * 2.0 - height) / height;
+
+  state->velocityX = xpos - mousePos[0];
+  state->velocityY = ypos - mousePos[1];
+
+  mousePos[0] = xpos;
+  mousePos[1] = ypos;
 }

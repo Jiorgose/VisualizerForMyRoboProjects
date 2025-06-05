@@ -128,7 +128,6 @@ void main() {
   ray.direction = getRayDir(UV);
 
   vec2 mousePos = (mousePosition * 2.0 - resolution) / resolution.y;
-  mousePos.y = clamp(float(mousePos.y), -0.8, 0.8);
 
   ray.origin.yz *= rot2D(-mousePos.y * 2.0);
   ray.direction.yz *= rot2D(-mousePos.y * 2.0);
