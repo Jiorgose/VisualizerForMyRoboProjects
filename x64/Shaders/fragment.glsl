@@ -1,9 +1,14 @@
 #version 460
 
+#define pi 4.0 * atan(1.0)
+
 uniform float time;
 uniform vec2 resolution;
 
 uniform vec2 mousePosition;
+
+uniform vec3 objectPosition;
+uniform vec3 objectRotation;
 
 in vec2 UV;
 out vec4 color;
@@ -50,14 +55,16 @@ float planeSDF(vec3 p, vec2 size, float h)
   return length(vec2(horizDist, vertDist));
 }
 
-float SDFbox(vec3 pos) { return boxSDF(pos + vec3(0.0, sin(time) - 1.0, 0.0), vec3(1.0)); }
-float SDFplane(vec3 pos) { return boxSDF(pos + vec3(0.0, 101.0, 0.0), vec3(4.0, 100.0, 4.0)); }
+float SDFbox(vec3 pos) {
+  pos.xy *= rot2D(objectRotation.x * (pi / 180.0));
+  pos.xz *= rot2D(objectRotation.y * (pi / 180.0));
+  pos.zy *= rot2D(objectRotation.z * (pi / 180.0));
+
+  return boxSDF(pos + objectPosition * vec3(-1.0), vec3(1.0));
+}
+float SDFplane(vec3 pos) { return boxSDF(pos + vec3(0.0, 101.0, 0.0), vec3(3.99, 100.0, 3.99)); }
 
 float scene(vec3 pos) {
-  //q.xy *= rot2D(time);
-  //q.xz *= rot2D(time);
-  //q.zy *= rot2D(time);
-  
   return min(SDFbox(pos), SDFplane(pos));
 }
 
@@ -107,67 +114,83 @@ vec3 getRayDir(vec2 uv) {
   return normalize(vec3(p, 1.0));
 }
 
+vec3 col = vec3(0.0);
+int samples = 4;
+vec2 offsets[4] = vec2[](
+  vec2(-0.25, -0.25),
+  vec2( 0.25, -0.25),
+  vec2(-0.25,  0.25),
+  vec2( 0.25,  0.25)
+);
+
+
 void main() {
-  //Initialization
-  Ray ray;
-  ray.origin = vec3(0.0, 0.0, -6.0);
-  ray.direction = getRayDir(UV);
+  for (int s = 0; s < samples; ++s) {
+    vec2 jitter = offsets[s] / resolution;
+    vec2 uv = UV + jitter;
+    //Initialization
+    Ray ray;
+    ray.origin = vec3(0.0, 0.0, -6.0);
+    ray.direction = getRayDir(UV);
 
-  vec2 mousePos = (mousePosition * 2.0 - resolution) / resolution.y;
+    vec2 mousePos = (mousePosition * 2.0 - resolution) / resolution.y;
 
-  ray.origin.yz *= rot2D(-mousePos.y * 2.0);
-  ray.direction.yz *= rot2D(-mousePos.y * 2.0);
+    ray.origin.yz *= rot2D(-mousePos.y * 2.0);
+    ray.direction.yz *= rot2D(-mousePos.y * 2.0);
 
-  ray.origin.xz *= rot2D(-mousePos.x * 2.0);
-  ray.direction.xz *= rot2D(-mousePos.x * 2.0);
+    ray.origin.xz *= rot2D(-mousePos.x * 2.0);
+    ray.direction.xz *= rot2D(-mousePos.x * 2.0);
 
-  vec3 col = vec3(0.0);
-  float totalDistance = 0.0;
-  float dist = 0.0;
+    vec3 sampleCol = vec3(0.0);
+    float totalDistance = 0.0;
+    float dist = 0.0;
 
-  //Raymarching
-  for (int i = 0; i < 256; i++) {
-    ray.position = ray.origin + ray.direction * totalDistance;
+    //Raymarching
+    for (int i = 0; i < 256; i++) {
+      ray.position = ray.origin + ray.direction * totalDistance;
 
-    dist = scene(ray.position);
+      dist = scene(ray.position);
 
-    totalDistance += max(dist, 0.001);
+      totalDistance += max(dist, 0.001);
 
-    vec3 lightDir = vec3(-20.0, 40.0, -20.0) - ray.position;
-    float lightDist = length(lightDir);
-    lightDir /= lightDist;
+      vec3 lightDir = vec3(-20.0, 40.0, -20.0) - ray.position;
+      float lightDist = length(lightDir);
+      lightDir /= lightDist;
 
-    if (dist < 0.001) {
-      if (SDFbox(ray.position) < 0.001) { col = vec3(1.0, 0.0, 0.0); }
-      else if (SDFplane(ray.position) < 0.001) {
-        float scale = 1.0;
-        vec2 coords = ray.position.xz * scale;
-        float checker = mod(floor(coords.x) + floor(coords.y), 2.0);
-        vec3 baseColor1 = vec3(0.8);
-        vec3 baseColor2 = vec3(0.2);
-        col = mix(baseColor1, baseColor2, checker);
+      if (dist < 0.001) {
+        if (SDFbox(ray.position) < 0.001) { sampleCol = vec3(1.0, 0.0, 0.0); }
+        else if (SDFplane(ray.position) < 0.001) {
+          float scale = 1.0;
+          vec2 coords = ray.position.xz * scale;
+          float checker = mod(floor(coords.x) + floor(coords.y), 2.0);
+          vec3 baseColor1 = vec3(0.8);
+          vec3 baseColor2 = vec3(0.2);
+          sampleCol = mix(baseColor1, baseColor2, checker);
+        }
+
+        vec3 normal = calcNormal(ray.position);
+        vec3 shadowStart = ray.position + normal * 0.001;
+
+        float spec = pow(max(dot(normal, normalize(lightDir + normalize(-ray.direction))), 0.0), 64.0);
+
+        sampleCol += vec3(1.0) * spec * 0.2;
+        sampleCol = sampleCol * shadow(shadowStart, lightDir, 0.01, lightDist) * max(dot(normal, lightDir), 0.1);
+        sampleCol *= AO(ray.position, calcNormal(ray.position), 0.1);
       }
 
-      vec3 normal = calcNormal(ray.position);
-      vec3 shadowStart = ray.position + normal * 0.001;
+      if (dist < .001 || dist > 100.0) break;
+    }
+    sampleCol = pow(sampleCol, vec3(1.0 / 2.2));
 
-      float spec = pow(max(dot(normal, normalize(lightDir + normalize(-ray.direction))), 0.0), 64.0);
+    float fog = 1.0 - exp(-totalDistance * 0.05);
+    sampleCol = mix(sampleCol, vec3(15.0 / 255.0), fog);
 
-      col += vec3(1.0) * spec * 0.2;
-      col = col * shadow(shadowStart, lightDir, 0.01, lightDist) * min(dot(normal, lightDir), 1.0) * max(dot(normal, lightDir), 0.2);
-      col *= AO(ray.position, calcNormal(ray.position), 0.1);
+    if (dist > 0.001) {
+      sampleCol = vec3(15.0 / 255.0);
     }
 
-    if (dist < .001 || dist > 100.0) break;
+    col += sampleCol;
   }
-  col = pow(col, vec3(1.0 / 2.2));
-
-  float fog = 1.0 - exp(-totalDistance * 0.05);
-  col = mix(col, vec3(15.0 / 255.0), fog);
-
-  if (dist > 0.001) {
-    col = vec3(15.0 / 255.0);
-  }
-
+  col /= float(samples);
   color = vec4(col, 1.0);
 }

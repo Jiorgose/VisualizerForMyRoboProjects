@@ -68,7 +68,8 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   ImGui::End();
 
   ImGui::Begin("Settings");
-  ImGui::Text("Hi :D");
+  ImGui::DragFloat3("object position: ", state->objectPosition, 0.01f, -3.5f, 3.5f);
+  ImGui::DragFloat3("object rotation: ", state->objectRotation, 0.1f, 0.0f, 360.0f);
   ImGui::End();
 }
 

@@ -26,8 +26,8 @@ void moveMouse(GLFWwindow *window)
     double dx = xpos - mousePos[0];
     double dy = ypos - mousePos[1];
 
-    state->velocityX = dx * (400.0 / state->renderWidth);
-    state->velocityY = dy * (300.0 / state->renderHeight);
+    state->velocityX = dx / (4096.0 / state->renderWidth);
+    state->velocityY = dy / (2160.0 / state->renderHeight);
 
     mousePos[0] = xpos;
     mousePos[1] = ypos;

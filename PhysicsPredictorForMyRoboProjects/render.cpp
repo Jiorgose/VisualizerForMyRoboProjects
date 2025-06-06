@@ -25,11 +25,17 @@ void render(GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO,
   GLint resolutionLocation = glGetUniformLocation(shader, "resolution");
   GLint mousePositionLocation = glGetUniformLocation(shader, "mousePosition");
 
+  GLint objectPositionLocation = glGetUniformLocation(shader, "objectPosition");
+  GLint objectRotationLocation = glGetUniformLocation(shader, "objectRotation");
+
   glUseProgram(shader);
 
   glUniform1f(timeLocation, glfwGetTime());
   glUniform2f(resolutionLocation, state->renderWidth, state->renderHeight);
   glUniform2f(mousePositionLocation, state->mousePosition[0], state->mousePosition[1]);
+  //objectRotation = vec3(45 * (pi / 180.0), 0.0, 0.0);
+  glUniform3f(objectPositionLocation, state->objectPosition[0], state->objectPosition[1], state->objectPosition[2]);
+  glUniform3f(objectRotationLocation, state->objectRotation[0], state->objectRotation[1], state->objectRotation[2]);
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
