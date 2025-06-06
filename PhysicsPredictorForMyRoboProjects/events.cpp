@@ -31,22 +31,3 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
   }
 }
-
-static double mousePos[2];
-
-void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
-{
-  AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
-
-  if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE || !state->isInScene) {
-    mousePos[0] = xpos;
-    mousePos[1] = ypos;
-    return;
-  }
-
-  state->velocityX = (xpos - mousePos[0]) * 10.0;
-  state->velocityY = (ypos - mousePos[1]) * 10.0;
-
-  mousePos[0] = xpos;
-  mousePos[1] = ypos;
-}
