@@ -9,8 +9,7 @@
 #include "window.hpp"
 #include "render.hpp"
 #include "load.hpp"
-
-double PI = 3.14159265359;
+#include "mouseMovement.hpp"
 
 AppState state;
 
@@ -24,16 +23,9 @@ GLuint RBO;
 GLuint textureId;
 
 GLuint shader;
-static double mousePos[2];
-const double clamp(const double& value, const double& low, const double& high)
-{
-  return (value < low) ? low : (high < value) ? high : value;
-}
 
 int main(int argc, char* argv[])
 {
-  bool wasMouseDown = false;
-
   GLFWwindow* window = createWindow(width, height, "lil render");
   glfwSetKeyCallback(window, keyCallback);
 
@@ -74,38 +66,7 @@ int main(int argc, char* argv[])
 
     //fixed framerate
     if ((state.t - state.frameTime) >= (1.0 / (double)state.fps)) {
-      bool isMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-
-      double xpos, ypos;
-      glfwGetCursorPos(window, &xpos, &ypos);
-
-      if (isMouseDown && !wasMouseDown) {
-        mousePos[0] = xpos;
-        mousePos[1] = ypos;
-      }
-
-      if (isMouseDown && state.isInScene) {
-        double dx = xpos - mousePos[0];
-        double dy = ypos - mousePos[1];
-
-        state.velocityX = dx * (400.0 / state.renderWidth);
-        state.velocityY = dy * (300.0 / state.renderHeight);
-
-        mousePos[0] = xpos;
-        mousePos[1] = ypos;
-      }
-
-      wasMouseDown = isMouseDown;
-
-      state.velocityX *= 0.9;
-      state.velocityY *= 0.9;
-
-      state.mousePosition[0] += state.velocityX;
-      state.mousePosition[1] += state.velocityY;
-      double normalizedY = state.mousePosition[1] / state.renderHeight;
-      normalizedY = clamp(normalizedY, 0.1, 0.8);
-      state.mousePosition[1] = normalizedY * state.renderHeight;
-
+      moveMouse(window);
 
       uiNewFrame();
       render(shader, textureId, RBO, FBO, VAO, window);

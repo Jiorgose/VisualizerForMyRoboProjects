@@ -162,6 +162,7 @@
     <ClCompile Include="events.cpp" />
     <ClCompile Include="load.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mouseMovement.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="window.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="common.hpp" />
     <ClInclude Include="events.hpp" />
     <ClInclude Include="load.hpp" />
+    <ClInclude Include="mouseMovement.hpp" />
     <ClInclude Include="render.hpp" />
     <ClInclude Include="ui.hpp" />
     <ClInclude Include="window.hpp" />

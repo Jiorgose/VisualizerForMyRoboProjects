@@ -75,6 +75,9 @@
     <ClCompile Include="load.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="mouseMovement.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Dependencies\imgui\imconfig.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="common.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mouseMovement.hpp">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
