@@ -68,7 +68,7 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   ImGui::End();
 
   ImGui::Begin("Settings");
-  ImGui::ColorEdit3("color", state->color, 0);
+  ImGui::Text("Hi :D");
   ImGui::End();
 }
 

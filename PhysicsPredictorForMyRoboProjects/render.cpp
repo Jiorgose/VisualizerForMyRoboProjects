@@ -22,13 +22,11 @@ void render(GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO,
   glClear(GL_COLOR_BUFFER_BIT);
 
   GLint timeLocation = glGetUniformLocation(shader, "time");
-  GLint colorLocation = glGetUniformLocation(shader, "sColor");
   GLint resolutionLocation = glGetUniformLocation(shader, "resolution");
   GLint mousePositionLocation = glGetUniformLocation(shader, "mousePosition");
 
   glUseProgram(shader);
 
-  glUniform3f(colorLocation, state->color[0], state->color[1], state->color[2]);
   glUniform1f(timeLocation, glfwGetTime());
   glUniform2f(resolutionLocation, state->renderWidth, state->renderHeight);
   glUniform2f(mousePositionLocation, state->mousePosition[0], state->mousePosition[1]);

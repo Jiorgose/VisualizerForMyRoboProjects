@@ -1,7 +1,6 @@
 #version 460
 
 uniform float time;
-uniform vec3 sColor;
 uniform vec2 resolution;
 
 uniform vec2 mousePosition;
@@ -51,28 +50,15 @@ float planeSDF(vec3 p, vec2 size, float h)
   return length(vec2(horizDist, vertDist));
 }
 
+float SDFbox(vec3 pos) { return boxSDF(pos + vec3(0.0, sin(time) - 1.0, 0.0), vec3(1.0)); }
+float SDFplane(vec3 pos) { return boxSDF(pos + vec3(0.0, 101.0, 0.0), vec3(4.0, 100.0, 4.0)); }
 
 float scene(vec3 pos) {
-  Sphere sphere;
-  sphere.radius = 1.0;
-  sphere.center = vec3(sin(time) * 3.0, 0.0, 0.0);
-
-  Sphere sphere2;
-  sphere2.radius = 0.5;
-  sphere2.center = vec3((sin(time) * 3.0) + (sin(time * 4) * 1.5), 0.0, 0.0);
-
-  float SDFsphere = sphereSDF(pos, sphere);
-  float SDFsphere2 = sphereSDF(pos, sphere2);
-
   //q.xy *= rot2D(time);
   //q.xz *= rot2D(time);
   //q.zy *= rot2D(time);
-
-  float SDFbox = boxSDF(pos, vec3(1.0));
-
-  float objects = min(min(SDFsphere, SDFsphere2), SDFbox);
-
-  return min(objects, planeSDF(pos, vec2(5.0, 5.0), -1.0));
+  
+  return min(SDFbox(pos), SDFplane(pos));
 }
 
 vec3 calcNormal(vec3 p) { 
@@ -152,16 +138,28 @@ void main() {
     lightDir /= lightDist;
 
     if (dist < 0.001) {
+      if (SDFbox(ray.position) < 0.001) { col = vec3(1.0, 0.0, 0.0); }
+      else if (SDFplane(ray.position) < 0.001) {
+        float scale = 1.0;
+        vec2 coords = ray.position.xz * scale;
+        float checker = mod(floor(coords.x) + floor(coords.y), 2.0);
+        vec3 baseColor1 = vec3(0.8);
+        vec3 baseColor2 = vec3(0.2);
+        col = mix(baseColor1, baseColor2, checker);
+      }
+
       vec3 normal = calcNormal(ray.position);
       vec3 shadowStart = ray.position + normal * 0.001;
 
-      col = sColor * shadow(shadowStart, lightDir, 0.01, lightDist);
+      float spec = pow(max(dot(normal, normalize(lightDir + normalize(-ray.direction))), 0.0), 64.0);
+
+      col += vec3(1.0) * spec * 0.2;
+      col = col * shadow(shadowStart, lightDir, 0.01, lightDist) * min(dot(normal, lightDir), 1.0) * max(dot(normal, lightDir), 0.2);
       col *= AO(ray.position, calcNormal(ray.position), 0.1);
     }
 
     if (dist < .001 || dist > 100.0) break;
   }
-
   col = pow(col, vec3(1.0 / 2.2));
 
   float fog = 1.0 - exp(-totalDistance * 0.05);

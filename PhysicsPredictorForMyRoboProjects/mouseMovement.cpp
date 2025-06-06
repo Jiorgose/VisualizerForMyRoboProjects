@@ -41,6 +41,6 @@ void moveMouse(GLFWwindow *window)
   state->mousePosition[0] += state->velocityX;
   state->mousePosition[1] += state->velocityY;
   double normalizedY = state->mousePosition[1] / state->renderHeight;
-  normalizedY = clamp(normalizedY, 0.1, 0.8);
+  normalizedY = clamp(normalizedY, 0.1, 0.5);
   state->mousePosition[1] = normalizedY * state->renderHeight;
 }
