@@ -56,12 +56,15 @@ float planeSDF(vec3 p, vec2 size, float h)
 }
 
 float SDFbox(vec3 pos) {
-  pos.xy *= rot2D(objectRotation.x * (pi / 180.0));
-  pos.xz *= rot2D(objectRotation.y * (pi / 180.0));
-  pos.zy *= rot2D(objectRotation.z * (pi / 180.0));
+  pos.y -= objectPosition.y;
 
-  return boxSDF(pos + objectPosition * vec3(-1.0), vec3(1.0));
+  pos.xy *= rot2D(-objectRotation.x * (pi / 180.0));
+  pos.xz *= rot2D(-objectRotation.y * (pi / 180.0));
+  pos.zy *= rot2D(-objectRotation.z * (pi / 180.0));
+
+  return boxSDF(pos, vec3(1.0));
 }
+
 float SDFplane(vec3 pos) { return boxSDF(pos + vec3(0.0, 101.0, 0.0), vec3(3.99, 100.0, 3.99)); }
 
 float scene(vec3 pos) {
@@ -161,7 +164,7 @@ void main() {
         if (SDFbox(ray.position) < 0.001) { sampleCol = vec3(1.0, 0.0, 0.0); }
         else if (SDFplane(ray.position) < 0.001) {
           float scale = 1.0;
-          vec2 coords = ray.position.xz * scale;
+          vec2 coords = ray.position.xz + vec2(objectPosition.x, objectPosition.z) * scale;
           float checker = mod(floor(coords.x) + floor(coords.y), 2.0);
           vec3 baseColor1 = vec3(0.8);
           vec3 baseColor2 = vec3(0.2);
