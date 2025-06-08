@@ -134,7 +134,7 @@ void main() {
     //Initialization
     Ray ray;
     ray.origin = vec3(0.0, 0.0, -6.0);
-    ray.direction = getRayDir(UV);
+    ray.direction = getRayDir(uv);
 
     vec2 mousePos = (mousePosition * 2.0 - resolution) / resolution.y;
 

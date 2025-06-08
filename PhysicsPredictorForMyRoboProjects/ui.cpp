@@ -40,10 +40,11 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
     ImGui::DockBuilderRemoveNode(dockspaceId);
     ImGui::DockBuilderAddNode(dockspaceId, dockspaceFlags | ImGuiDockNodeFlags_DockSpace);
     ImGui::DockBuilderSetNodeSize(dockspaceId, viewport->Size);
-    auto rightId = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Right, 0.25f, nullptr, &dockspaceId);
+    auto rightId = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Right, 0.3f, nullptr, &dockspaceId);
 
     ImGui::DockBuilderDockWindow("Scene", dockspaceId);
     ImGui::DockBuilderDockWindow("Settings", rightId);
+    ImGui::DockBuilderDockWindow("Info", rightId);
 
     ImGui::DockBuilderFinish(dockspaceId);
     ImGui::DockBuilderFinish(dockspaceId);
@@ -70,6 +71,10 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   ImGui::Begin("Settings");
   ImGui::DragFloat3("object position: ", state->objectPosition, 0.01f, -3.5f, 3.5f);
   ImGui::DragFloat3("object rotation: ", state->objectRotation, 0.1f, 0.0f, 360.0f);
+  ImGui::End();
+
+  ImGui::Begin("Info");
+  ImGui::Text("I am currently running at %d fps", static_cast<int>(round(1.0 / state->dt)));
   ImGui::End();
 }
 
