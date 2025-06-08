@@ -149,7 +149,7 @@ void main() {
     float dist = 0.0;
 
     //Raymarching
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < 100; i++) {
       ray.position = ray.origin + ray.direction * totalDistance;
 
       dist = scene(ray.position);
