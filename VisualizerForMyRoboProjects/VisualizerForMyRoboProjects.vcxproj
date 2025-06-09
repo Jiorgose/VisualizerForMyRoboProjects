@@ -24,6 +24,7 @@
     <ProjectGuid>{b63d455b-54c8-4c2e-ad20-03cc9b1f78e4}</ProjectGuid>
     <RootNamespace>PhysicsPredictorForMyRoboProjects</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>VisualizerForMyRoboProjects</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
