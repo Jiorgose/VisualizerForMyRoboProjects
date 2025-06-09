@@ -1,7 +1,5 @@
 #include "ui.hpp"
 
-static ImGui::FileBrowser fileDialog(ImGuiFileBrowserFlags_SelectDirectory);
-
 void uiNewFrame()
 {
   ImGui_ImplOpenGL3_NewFrame();
@@ -69,14 +67,11 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   ImGui::End();
 
   ImGui::Begin("Settings");
-  if (ImGui::Button("open file dialog"))
-    fileDialog.Open();
   ImGui::End();
 }
 
 void uiRender()
 {
-  fileDialog.Display();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -103,10 +98,6 @@ void uiInit(GLFWwindow* window)
 
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 460");
-
-  fileDialog.SetTitle("Select module");
-  fileDialog.SetTypeFilters({ });
-  fileDialog.SetPwd("../Modules");
 }
 
 void uiDestroy()
