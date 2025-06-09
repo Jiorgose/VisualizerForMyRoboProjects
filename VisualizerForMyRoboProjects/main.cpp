@@ -2,6 +2,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <serial/serial.h>
 
 #include "common.hpp"
 #include "events.hpp"
@@ -10,6 +11,7 @@
 #include "render.hpp"
 #include "load.hpp"
 #include "mouseMovement.hpp"
+#include "getInfo.hpp"
 
 AppState state;
 
@@ -55,11 +57,15 @@ int main(int argc, char* argv[])
   create_shaders(shader, vertexShaderCode, fragmentShaderCode);
   create_framebuffer(int(state.renderWidth), int(state.renderHeight), textureId, FBO, RBO, &state);
 
+  initSerial();
+
   while (!glfwWindowShouldClose(window)) {
     //time stuff :)
     state.t = glfwGetTime();
     state.dt = state.t - state.frameTime;
     state.updateTime = state.t;
+
+    updateSerial();
 
     //Input
     glfwPollEvents();

@@ -81,6 +81,9 @@
     <ClCompile Include="mouseMovement.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="getInfo.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Dependencies\imgui\imconfig.h">
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="..\Dependencies\imFileBrowser\imfilebrowser.h">
       <Filter>Header Files\imFileBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="getInfo.hpp">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
