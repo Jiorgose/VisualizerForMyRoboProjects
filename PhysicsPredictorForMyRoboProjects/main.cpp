@@ -10,7 +10,6 @@
 #include "render.hpp"
 #include "load.hpp"
 #include "mouseMovement.hpp"
-#include "physics.hpp"
 
 AppState state;
 
@@ -67,8 +66,6 @@ int main(int argc, char* argv[])
 
     //fixed framerate
     if ((state.t - state.frameTime) >= (1.0 / (double)state.fps)) {
-      updatePhysics(window);
-
       moveMouse(window);
 
       uiNewFrame();

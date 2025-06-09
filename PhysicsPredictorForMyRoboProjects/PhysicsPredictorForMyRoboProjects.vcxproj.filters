@@ -31,6 +31,9 @@
     <Filter Include="Source Files\shaders">
       <UniqueIdentifier>{3b732a2d-1067-400f-b90f-bf6ff7a0df3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\imFileBrowser">
+      <UniqueIdentifier>{f1b4d8a4-ef32-4502-a0a9-8bea63ab0b96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,9 +80,6 @@
     </ClCompile>
     <ClCompile Include="mouseMovement.cpp">
       <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="physics.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,8 +131,8 @@
     <ClInclude Include="mouseMovement.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="physics.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\Dependencies\imFileBrowser\imfilebrowser.h">
+      <Filter>Header Files\imFileBrowser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

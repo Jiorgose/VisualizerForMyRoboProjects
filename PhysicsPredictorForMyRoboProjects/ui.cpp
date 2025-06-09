@@ -1,5 +1,7 @@
 #include "ui.hpp"
 
+static ImGui::FileBrowser fileDialog(ImGuiFileBrowserFlags_SelectDirectory);
+
 void uiNewFrame()
 {
   ImGui_ImplOpenGL3_NewFrame();
@@ -44,9 +46,7 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 
     ImGui::DockBuilderDockWindow("Scene", dockspaceId);
     ImGui::DockBuilderDockWindow("Settings", rightId);
-    ImGui::DockBuilderDockWindow("Info", rightId);
 
-    ImGui::DockBuilderFinish(dockspaceId);
     ImGui::DockBuilderFinish(dockspaceId);
   }
   ImGui::End();
@@ -69,17 +69,14 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   ImGui::End();
 
   ImGui::Begin("Settings");
-  ImGui::DragFloat3("object position", glm::value_ptr(state->objectPosition), 0.01f, -3.5f, 3.5f);
-  ImGui::DragFloat3("object rotation", glm::value_ptr(state->objectRotation), 0.1f, 0.0f, 360.0f);
-  ImGui::End();
-
-  ImGui::Begin("Info");
-  ImGui::Text("I am currently running at %d fps", static_cast<int>(round(1.0 / state->dt)));
+  if (ImGui::Button("open file dialog"))
+    fileDialog.Open();
   ImGui::End();
 }
 
 void uiRender()
 {
+  fileDialog.Display();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -106,6 +103,10 @@ void uiInit(GLFWwindow* window)
 
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 460");
+
+  fileDialog.SetTitle("Select module");
+  fileDialog.SetTypeFilters({ });
+  fileDialog.SetPwd("../Modules");
 }
 
 void uiDestroy()

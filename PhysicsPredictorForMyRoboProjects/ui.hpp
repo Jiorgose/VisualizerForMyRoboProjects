@@ -6,6 +6,7 @@
 #include <imgui_internal.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <imfilebrowser.h>
 #include <gtc/type_ptr.hpp>
 
 void uiNewFrame();
