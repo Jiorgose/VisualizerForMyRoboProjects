@@ -8,6 +8,8 @@
 #include <imgui_impl_opengl3.h>
 #include <gtc/type_ptr.hpp>
 
+#include "getInfo.hpp"
+
 void uiNewFrame();
 
 void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window);

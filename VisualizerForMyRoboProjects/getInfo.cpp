@@ -64,3 +64,39 @@ void updateSerial() {
     }
   }
 }
+
+void scanForArduinoPorts(bool* autoSelect, int* selectedPortIndex, std::vector<std::string>* arduinoPorts) {
+  arduinoPorts->clear();
+
+  auto ports = serial::list_ports();
+
+  for (const auto& port : ports) {
+    std::string desc = port.description;
+    std::string hwid = port.hardware_id;
+
+    bool isArduino = false;
+
+    if (desc.find("Arduino") != std::string::npos) {
+      isArduino = true;
+    }
+    else if (hwid.find("VID:PID=2341:") != std::string::npos) {
+      isArduino = true;
+    }
+    else if (desc.find("USB Serial") != std::string::npos || hwid.find("USB") != std::string::npos) {
+      isArduino = true;
+    }
+
+    if (isArduino) {
+      arduinoPorts->push_back(port.port);
+    }
+  }
+
+  if (autoSelect && !arduinoPorts->empty()) {
+    *selectedPortIndex = 0;
+    closeSerial();
+    initSerial((*arduinoPorts)[*selectedPortIndex]);
+  }
+  else {
+    *selectedPortIndex = -1;
+  }
+}

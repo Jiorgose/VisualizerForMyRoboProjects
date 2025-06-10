@@ -7,6 +7,10 @@ void uiNewFrame()
   ImGui::NewFrame();
 }
 
+static bool autoSelect = false;
+static int selectedPortIndex = -1;
+static std::vector<std::string> arduinoPorts;
+
 void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 {
   AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
@@ -67,6 +71,31 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   ImGui::End();
 
   ImGui::Begin("Settings");
+
+  if (ImGui::CollapsingHeader("Select Arduino", ImGuiTreeNodeFlags_DefaultOpen)) {
+    if (ImGui::Button("Refresh Arduino Ports")) {
+      scanForArduinoPorts(&autoSelect, &selectedPortIndex, &arduinoPorts);
+    }
+
+    ImGui::Checkbox("Auto Select Arduino", &autoSelect);
+
+    ImGui::Separator();
+
+    if (arduinoPorts.empty()) {
+      ImGui::Text("No Arduino devices found.");
+    }
+    else {
+      for (int i = 0; i < (int)arduinoPorts.size(); ++i) {
+        bool selected = (selectedPortIndex == i);
+        if (ImGui::RadioButton(arduinoPorts[i].c_str(), selected)) {
+          selectedPortIndex = i;
+          closeSerial();
+          initSerial(arduinoPorts[selectedPortIndex]);
+        }
+      }
+    }
+  }
+
   ImGui::End();
 }
 

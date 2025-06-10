@@ -96,6 +96,9 @@
     <ClCompile Include="..\Dependencies\serial\src\impl\win.cc">
       <Filter>Source Files\serial</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dependencies\serial\src\impl\list_ports\list_ports_win.cc">
+      <Filter>Source Files\serial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Dependencies\imgui\imconfig.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\Dependencies\serial\include\serial\serial.h">
+      <Filter>Header Files\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\serial\include\serial\impl\win.h">
       <Filter>Header Files\serial</Filter>
     </ClInclude>
   </ItemGroup>
