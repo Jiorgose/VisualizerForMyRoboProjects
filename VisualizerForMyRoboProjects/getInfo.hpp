@@ -4,5 +4,6 @@
 #include <thread>
 #include <serial/serial.h>
 
-void initSerial();
+void initSerial(const std::string& port);
+void closeSerial();
 void updateSerial();

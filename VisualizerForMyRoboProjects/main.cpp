@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
   create_shaders(shader, vertexShaderCode, fragmentShaderCode);
   create_framebuffer(int(state.renderWidth), int(state.renderHeight), textureId, FBO, RBO, &state);
 
-  initSerial();
+  initSerial("COM5");
 
   while (!glfwWindowShouldClose(window)) {
     //time stuff :)

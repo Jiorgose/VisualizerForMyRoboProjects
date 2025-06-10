@@ -34,6 +34,12 @@
     <Filter Include="Header Files\imFileBrowser">
       <UniqueIdentifier>{f1b4d8a4-ef32-4502-a0a9-8bea63ab0b96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\serial">
+      <UniqueIdentifier>{1ad2a7be-233f-4c01-8c52-e9a1ca583114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\serial">
+      <UniqueIdentifier>{01cd9c3a-1211-4c97-b055-b6824b25df8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -83,6 +89,12 @@
     </ClCompile>
     <ClCompile Include="getInfo.cpp">
       <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dependencies\serial\src\serial.cc">
+      <Filter>Source Files\serial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dependencies\serial\src\impl\win.cc">
+      <Filter>Source Files\serial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="getInfo.hpp">
       <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\serial\include\serial\serial.h">
+      <Filter>Header Files\serial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
