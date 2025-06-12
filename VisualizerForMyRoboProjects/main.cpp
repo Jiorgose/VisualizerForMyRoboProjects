@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
     state.dt = state.t - state.frameTime;
     state.updateTime = state.t;
 
-    updateSerial();
+    updateSerial(window);
 
     //Input
     glfwPollEvents();

@@ -39,12 +39,28 @@ std::string trim(const std::string& str) {
   size_t end = str.find_last_not_of(whitespace);
   return str.substr(start, end - start + 1);
 }
+
+glm::vec3 parseVec3(const std::string& str) {
+  std::regex regexPattern(R"((-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+))");
+  std::smatch matches;
+  if (std::regex_search(str, matches, regexPattern)) {
+    float x = std::stof(matches[1].str());
+    float y = std::stof(matches[2].str());
+    float z = std::stof(matches[3].str());
+    return glm::vec3(x, -y, z);
+  }
+  else {
+    return glm::vec3(0.0f);
+  }
+}
  
-void updateSerial() {
+void updateSerial(GLFWwindow* window) {
   if (!mainSerial) {
     std::cout << "Serial port not initialized!" << std::endl;
     return;
   }
+
+  AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
 
   size_t bytesAvailable = mainSerial->available();
   if (bytesAvailable > 0) {
@@ -59,7 +75,8 @@ void updateSerial() {
       message = trim(message);
 
       if (!message.empty()) {
-        std::cout << "Received full message: " << message << std::endl;
+        //std::cout << "Received full message: " << message << std::endl;
+        state->objectRotation = parseVec3(message);
       }
     }
   }
