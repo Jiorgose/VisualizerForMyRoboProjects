@@ -10,11 +10,11 @@ void render(GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO,
   glClear(GL_COLOR_BUFFER_BIT);
 
   if (state->renderWidth != lastWidth || state->renderHeight != lastHeight) {
-    rescale_framebuffer(state->renderWidth, state->renderHeight, textureId, RBO, FBO);
-    lastWidth = state->renderWidth;
-    lastHeight = state->renderHeight;
+    rescale_framebuffer(int(state->renderWidth), int(state->renderHeight), textureId, RBO, FBO);
+    lastWidth = int(state->renderWidth);
+    lastHeight = int(state->renderHeight);
   }
-  glViewport(0, 0, state->renderWidth, state->renderHeight);
+  glViewport(0, 0, GLsizei(state->renderWidth), GLsizei(state->renderHeight));
 
   bind_framebuffer(FBO);
 
@@ -30,10 +30,9 @@ void render(GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO,
 
   glUseProgram(shader);
 
-  glUniform1f(timeLocation, glfwGetTime());
+  glUniform1f(timeLocation, GLfloat(glfwGetTime()));
   glUniform2f(resolutionLocation, state->renderWidth, state->renderHeight);
   glUniform2f(mousePositionLocation, state->mousePosition.x, state->mousePosition.y);
-  //objectRotation = vec3(45 * (pi / 180.0), 0.0, 0.0);
   glUniform3f(objectPositionLocation, state->objectPosition.x, state->objectPosition.y, state->objectPosition.z);
   glUniform3f(objectRotationLocation, state->objectRotation.x, state->objectRotation.y, state->objectRotation.z);
 
