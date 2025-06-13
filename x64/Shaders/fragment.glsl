@@ -30,9 +30,41 @@ mat2 rot2D(float angle) {
   return mat2(cosine, -sine, sine, cosine);
 }
 
+mat3 rotationMatrix(vec3 angles) {
+  float sx = sin(angles.x), cx = cos(angles.x);
+  float sy = sin(angles.y), cy = cos(angles.y);
+  float sz = sin(angles.z), cz = cos(angles.z);
+
+  mat3 rotX = mat3(
+    1.0, 0.0, 0.0,
+    0.0, cx, -sx,
+    0.0, sx, cx
+  );
+    
+  mat3 rotY = mat3(
+    cy, 0.0, sy,
+    0.0, 1.0, 0.0,
+    -sy, 0.0, cy
+  );
+    
+  mat3 rotZ = mat3(
+    cz, -sz, 0.0,
+    sz, cz, 0.0,
+    0.0, 0.0, 1.0
+  );
+
+  return rotZ * rotY * rotX;
+}
+
 float sphereSDF(vec3 pos, Sphere sphere)
 {
   return(length(pos - sphere.center) - sphere.radius);
+}
+
+float cylinderSDF( vec3 p, float h, float r )
+{
+  vec2 d = abs(vec2(length(p.xz),p.y)) - vec2(r,h);
+  return min(max(d.x,d.y),0.0) + length(max(d,0.0));
 }
 
 float boxSDF(vec3 p, vec3 b)
@@ -55,20 +87,24 @@ float planeSDF(vec3 p, vec2 size, float h)
   return length(vec2(horizDist, vertDist));
 }
 
-float SDFbox(vec3 pos) {
+float SDFobject(vec3 pos) {
   pos -= objectPosition;
 
-  pos.xy *= rot2D(-objectRotation.x * (pi / 180.0));
-  pos.xz *= rot2D(-objectRotation.y * (pi / 180.0));
-  pos.zy *= rot2D(-objectRotation.z * (pi / 180.0));
+  //pos.xy *= rot2D(-objectRotation.x + 90.0 * (pi / 180.0));
+  //pos.xz *= rot2D(-objectRotation.y * (pi / 180.0));
+  //pos.zy *= rot2D(-objectRotation.z * (pi / 180.0));
 
-  return boxSDF(pos, vec3(1.0));
+  vec3 rotationAngles = radians(vec3(-objectRotation.x, -objectRotation.y, -objectRotation.z));
+  mat3 rot = rotationMatrix(rotationAngles);
+  pos = rot * pos;
+
+  return cylinderSDF(pos, 0.3, 0.5);
 }
 
 float SDFplane(vec3 pos) { return boxSDF(pos + vec3(0.0, 101.0, 0.0), vec3(3.99, 100.0, 3.99)); }
 
 float scene(vec3 pos) {
-  return min(SDFbox(pos), SDFplane(pos));
+  return min(SDFobject(pos), SDFplane(pos));
 }
 
 vec3 calcNormal(vec3 p) { 
@@ -94,7 +130,7 @@ float shadow(vec3 point, vec3 dir, float start, float end) {
   }
     
   shadow = max(shadow, -1.0);
-  return smoothstep(-1.0, 0.0, shadow * 0.85);
+  return smoothstep(-1.0, 0.0, shadow * 0.75);
 }
 
 float AO(vec3 point, vec3 dir, float start) {
@@ -161,7 +197,7 @@ void main() {
       lightDir /= lightDist;
 
       if (dist < 0.001) {
-        if (SDFbox(ray.position) < 0.001) { sampleCol = vec3(1.0, 0.0, 0.0); }
+        if (SDFobject(ray.position) < 0.001) { sampleCol = vec3(1.0, 0.0, 0.0); }
         else if (SDFplane(ray.position) < 0.001) {
           float scale = 1.0;
           vec2 coords = ray.position.xz * scale;
@@ -177,7 +213,8 @@ void main() {
         float spec = pow(max(dot(normal, normalize(lightDir + normalize(-ray.direction))), 0.0), 64.0);
 
         sampleCol += vec3(1.0) * spec * 0.2;
-        sampleCol = sampleCol * shadow(shadowStart, lightDir, 0.01, lightDist) * max(dot(normal, lightDir), 0.1);
+        sampleCol *= shadow(shadowStart, lightDir, 0.01, lightDist);
+        sampleCol *= max(dot(normal, lightDir), 0.05);
         sampleCol *= AO(ray.position, calcNormal(ray.position), 0.1);
       }
 
