@@ -40,6 +40,12 @@
     <Filter Include="Header Files\serial">
       <UniqueIdentifier>{01cd9c3a-1211-4c97-b055-b6824b25df8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\implot">
+      <UniqueIdentifier>{87ebffd4-7f05-4a24-b482-6b62e5223fd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\implot">
+      <UniqueIdentifier>{db89dcd3-f7d9-4e83-938e-bd545fb38f0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -98,6 +104,15 @@
     </ClCompile>
     <ClCompile Include="..\Dependencies\serial\src\impl\list_ports\list_ports_win.cc">
       <Filter>Source Files\serial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dependencies\implot\implot.cpp">
+      <Filter>Source Files\implot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dependencies\implot\implot_demo.cpp">
+      <Filter>Source Files\implot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dependencies\implot\implot_items.cpp">
+      <Filter>Source Files\implot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="..\Dependencies\serial\include\serial\impl\win.h">
       <Filter>Header Files\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\implot\implot.h">
+      <Filter>Header Files\implot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\implot\implot_internal.h">
+      <Filter>Header Files\implot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -72,16 +72,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -89,7 +89,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -144,7 +144,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glad\include;$(SolutionDir)\Dependencies\glfw\include;$(SolutionDir)\Dependencies\imgui;$(SolutionDir)\Dependencies\stbImage;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\serial\include;$(SolutionDir)\Dependencies\implot;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -164,6 +164,9 @@
     <ClCompile Include="..\Dependencies\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\Dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\Dependencies\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\Dependencies\implot\implot.cpp" />
+    <ClCompile Include="..\Dependencies\implot\implot_demo.cpp" />
+    <ClCompile Include="..\Dependencies\implot\implot_items.cpp" />
     <ClCompile Include="..\Dependencies\serial\src\impl\list_ports\list_ports_win.cc" />
     <ClCompile Include="..\Dependencies\serial\src\impl\win.cc" />
     <ClCompile Include="..\Dependencies\serial\src\serial.cc" />
@@ -187,6 +190,8 @@
     <ClInclude Include="..\Dependencies\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Dependencies\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\Dependencies\implot\implot.h" />
+    <ClInclude Include="..\Dependencies\implot\implot_internal.h" />
     <ClInclude Include="..\Dependencies\serial\include\serial\impl\win.h" />
     <ClInclude Include="..\Dependencies\serial\include\serial\serial.h" />
     <ClInclude Include="common.hpp" />
