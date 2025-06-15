@@ -71,6 +71,12 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   ImGui::End();
 
   ImGui::Begin("Settings");
+  
+  if (ImGui::CollapsingHeader("Program Information", ImGuiCond_Once)) {
+    ImGui::SliderInt("Target FPS", &state->fps, 1, 120);
+    ImGui::Separator();
+    ImGui::Value("FPS: ", static_cast<float>(1.0 / state->dt));
+  }
 
   if (ImGui::CollapsingHeader("Select Arduino", ImGuiTreeNodeFlags_DefaultOpen)) {
     if (ImGui::Button("Refresh Arduino Ports")) {
