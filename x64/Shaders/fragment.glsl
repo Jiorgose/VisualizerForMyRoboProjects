@@ -8,7 +8,7 @@ uniform vec2 resolution;
 uniform vec2 mousePosition;
 
 uniform vec3 objectPosition;
-uniform vec3 objectRotation;
+uniform vec4 objectRotation;
 
 in vec2 UV;
 out vec4 color;
@@ -56,6 +56,15 @@ mat3 rotationMatrix(vec3 angles) {
   return rotZ * rotY * rotX;
 }
 
+mat3 quatToMat(vec4 q) {
+    float x = q.x, y = q.y, z = q.z, w = q.w;
+    return mat3(
+        1.0 - 2.0*y*y - 2.0*z*z, 2.0*x*y - 2.0*z*w,     2.0*x*z + 2.0*y*w,
+        2.0*x*y + 2.0*z*w,     1.0 - 2.0*x*x - 2.0*z*z, 2.0*y*z - 2.0*x*w,
+        2.0*x*z - 2.0*y*w,     2.0*y*z + 2.0*x*w,     1.0 - 2.0*x*x - 2.0*y*y
+    );
+}
+
 float sphereSDF(vec3 pos, Sphere sphere)
 {
   return(length(pos - sphere.center) - sphere.radius);
@@ -88,17 +97,9 @@ float planeSDF(vec3 p, vec2 size, float h)
 }
 
 float SDFobject(vec3 pos) {
-  pos -= objectPosition;
-
-  //pos.xy *= rot2D(-objectRotation.x + 90.0 * (pi / 180.0));
-  //pos.xz *= rot2D(-objectRotation.y * (pi / 180.0));
-  //pos.zy *= rot2D(-objectRotation.z * (pi / 180.0));
-
-  vec3 rotationAngles = radians(vec3(-objectRotation.x, -objectRotation.y, -objectRotation.z));
-  mat3 rot = rotationMatrix(rotationAngles);
-  pos = rot * pos;
-
-  return cylinderSDF(pos, 0.3, 0.5);
+  mat3 rot = quatToMat(objectRotation);
+  vec3 localPos = transpose(rot) * (pos - objectPosition);
+  return boxSDF(localPos, vec3(0.75));
 }
 
 float SDFplane(vec3 pos) { return boxSDF(pos + vec3(0.0, 101.0, 0.0), vec3(3.99, 100.0, 3.99)); }
@@ -213,11 +214,10 @@ void main() {
         float spec = pow(max(dot(normal, normalize(lightDir + normalize(-ray.direction))), 0.0), 64.0);
 
         sampleCol += vec3(1.0) * spec * 0.2;
-        sampleCol *= shadow(shadowStart, lightDir, 0.01, lightDist);
+        //sampleCol *= shadow(shadowStart, lightDir, 0.01, lightDist);
         sampleCol *= max(dot(normal, lightDir), 0.05);
         sampleCol *= AO(ray.position, calcNormal(ray.position), 0.1);
       }
-
       if (dist < .001 || dist > 100.0) break;
     }
     sampleCol = pow(sampleCol, vec3(1.0 / 2.2));

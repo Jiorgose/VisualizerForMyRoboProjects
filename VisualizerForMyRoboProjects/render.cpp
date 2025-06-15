@@ -34,7 +34,8 @@ void render(GLuint shader, GLuint textureId, GLuint RBO, GLuint FBO, GLuint VAO,
   glUniform2f(resolutionLocation, state->renderWidth, state->renderHeight);
   glUniform2f(mousePositionLocation, state->mousePosition.x, state->mousePosition.y);
   glUniform3f(objectPositionLocation, state->objectPosition.x, state->objectPosition.y, state->objectPosition.z);
-  glUniform3f(objectRotationLocation, state->objectRotation.x, state->objectRotation.y, state->objectRotation.z);
+  glUniform4f(objectRotationLocation, state->objectRotation.x, state->objectRotation.y, state->objectRotation.z, state->objectRotation.w);
+
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

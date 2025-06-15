@@ -40,18 +40,20 @@ std::string trim(const std::string& str) {
   return str.substr(start, end - start + 1);
 }
 
-glm::vec3 parseVec3(const std::string& str) {
-  std::regex regexPattern(R"((-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+))");
+glm::quat parseQuat(const std::string& str) {
+  std::regex regexPattern(R"((-?[\d\.eE+-]+)\s*,\s*(-?[\d\.eE+-]+)\s*,\s*(-?[\d\.eE+-]+)\s*,\s*(-?[\d\.eE+-]+))");
   std::smatch matches;
+
   if (std::regex_search(str, matches, regexPattern)) {
-    float x = std::stof(matches[1].str());
-    float y = std::stof(matches[2].str());
-    float z = std::stof(matches[3].str());
-    return glm::vec3(x, -y, z);
+    float w = std::stof(matches[1].str());
+    float x = std::stof(matches[2].str());
+    float y = std::stof(matches[3].str());
+    float z = std::stof(matches[4].str());
+
+    return glm::quat(w, x, z, y);
   }
-  else {
-    return glm::vec3(0.0f);
-  }
+
+  return glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 }
  
 void updateSerial(GLFWwindow* window) {
@@ -62,23 +64,29 @@ void updateSerial(GLFWwindow* window) {
 
   AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
 
-  size_t bytesAvailable = mainSerial->available();
-  if (bytesAvailable > 0) {
-    std::string chunk = mainSerial->read(bytesAvailable);
-    serialBuffer += chunk;
+  try {
+    size_t bytesAvailable = mainSerial->available();
+    if (bytesAvailable > 0) {
+      std::string chunk = mainSerial->read(bytesAvailable);
+      serialBuffer += chunk;
 
-    size_t pos;
-    while ((pos = serialBuffer.find('\n')) != std::string::npos) {
-      std::string message = serialBuffer.substr(0, pos);
-      serialBuffer.erase(0, pos + 1);
+      size_t pos;
+      while ((pos = serialBuffer.find('\n')) != std::string::npos) {
+        std::string message = serialBuffer.substr(0, pos);
+        serialBuffer.erase(0, pos + 1);
 
-      message = trim(message);
+        message = trim(message);
 
-      if (!message.empty()) {
-        //std::cout << "Received full message: " << message << std::endl;
-        state->objectRotation = parseVec3(message);
+        if (!message.empty()) {
+          std::cout << "Received full message: " << message << std::endl;
+          state->objectRotation = parseQuat(message);
+        }
       }
     }
+  }
+  catch (const std::exception& e) {
+    std::cerr << "Serial read error: " << e.what() << std::endl;
+    closeSerial();
   }
 }
 
