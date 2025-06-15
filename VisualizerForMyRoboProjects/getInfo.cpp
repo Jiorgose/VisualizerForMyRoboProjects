@@ -40,25 +40,45 @@ std::string trim(const std::string& str) {
   return str.substr(start, end - start + 1);
 }
 
-glm::quat parseQuat(const std::string& str) {
-  std::regex regexPattern(R"((-?[\d\.eE+-]+)\s*,\s*(-?[\d\.eE+-]+)\s*,\s*(-?[\d\.eE+-]+)\s*,\s*(-?[\d\.eE+-]+))");
-  std::smatch matches;
+struct SensorData {
+  glm::quat quat;
+  glm::vec3 accel;
+};
 
-  if (std::regex_search(str, matches, regexPattern)) {
-    float w = std::stof(matches[1].str());
-    float x = std::stof(matches[2].str());
-    float y = std::stof(matches[3].str());
-    float z = std::stof(matches[4].str());
+SensorData parseQuatAndAccel(const std::string& str) {
+  SensorData data;
+  size_t sep = str.find('|');
 
-    return glm::quat(w, x, z, y);
+  if (sep != std::string::npos) {
+    std::string quatStr = str.substr(0, sep);
+    std::string accelStr = str.substr(sep + 1);
+
+    std::regex quatPattern(R"((-?[\d\.eE+-]+),(-?[\d\.eE+-]+),(-?[\d\.eE+-]+),(-?[\d\.eE+-]+))");
+    std::regex accelPattern(R"((-?[\d\.eE+-]+),(-?[\d\.eE+-]+),(-?[\d\.eE+-]+))");
+
+    std::smatch quatMatch, accelMatch;
+
+    if (std::regex_search(quatStr, quatMatch, quatPattern)) {
+      float w = std::stof(quatMatch[1]);
+      float x = std::stof(quatMatch[2]);
+      float y = std::stof(quatMatch[3]);
+      float z = std::stof(quatMatch[4]);
+      data.quat = glm::quat(w, x, z, y);
+    }
+
+    if (std::regex_search(accelStr, accelMatch, accelPattern)) {
+      data.accel.x = std::stof(accelMatch[1]);
+      data.accel.y = std::stof(accelMatch[2]);
+      data.accel.z = std::stof(accelMatch[3]);
+    }
   }
 
-  return glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+  return data;
 }
  
 void updateSerial(GLFWwindow* window) {
   if (!mainSerial) {
-    std::cout << "Serial port not initialized!" << std::endl;
+    //std::cout << "Serial port not initialized!" << std::endl;
     return;
   }
 
@@ -79,7 +99,9 @@ void updateSerial(GLFWwindow* window) {
 
         if (!message.empty()) {
           std::cout << "Received full message: " << message << std::endl;
-          state->objectRotation = parseQuat(message);
+          SensorData sensData = parseQuatAndAccel(message);
+          state->objectRotation = sensData.quat;
+          state->objectAcceleration = sensData.accel;
         }
       }
     }

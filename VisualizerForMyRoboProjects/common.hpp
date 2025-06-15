@@ -1,7 +1,10 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <glm.hpp>
 #include <gtc/quaternion.hpp>
+#include <gtx/euler_angles.hpp>
 #include <vector>
 
 struct AppState {
@@ -21,5 +24,6 @@ struct AppState {
   glm::vec2 mousePosition = glm::vec2(0.0f);
 
   glm::vec3 objectPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 objectAcceleration = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::quat objectRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 };

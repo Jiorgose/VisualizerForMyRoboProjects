@@ -11,6 +11,47 @@ static bool autoSelect = false;
 static int selectedPortIndex = -1;
 static std::vector<std::string> arduinoPorts;
 
+static const size_t max_history_size = 100;
+
+static std::vector<float> pitch_history(max_history_size, 0.0f);
+static std::vector<float> yaw_history(max_history_size, 0.0f);
+static std::vector<float> roll_history(max_history_size, 0.0f);
+
+static std::vector<float> X_history(max_history_size, 0.0f);
+static std::vector<float> Y_history(max_history_size, 0.0f);
+static std::vector<float> Z_history(max_history_size, 0.0f);
+
+void updateRotationData(AppState* state) {
+  glm::vec3 euler = glm::eulerAngles(state->objectRotation);
+  float pitch = glm::degrees(euler.x);
+  float yaw = glm::degrees(euler.y);
+  float roll = glm::degrees(euler.z);
+
+  pitch_history.push_back(pitch);
+  yaw_history.push_back(yaw);
+  roll_history.push_back(roll);
+
+  if (pitch_history.size() > max_history_size) pitch_history.erase(pitch_history.begin());
+  if (yaw_history.size() > max_history_size) yaw_history.erase(yaw_history.begin());
+  if (roll_history.size() > max_history_size) roll_history.erase(roll_history.begin());
+}
+
+void updateAccelerationData(AppState* state) {
+  glm::vec3 acc = glm::vec3(state->objectAcceleration);
+  float X = glm::degrees(acc.x);
+  float Y = glm::degrees(acc.y);
+  float Z = glm::degrees(acc.z);
+
+  X_history.push_back(X);
+  Y_history.push_back(Y);
+  Z_history.push_back(Z);
+
+  if (X_history.size() > max_history_size) X_history.erase(X_history.begin());
+  if (Y_history.size() > max_history_size) Y_history.erase(Y_history.begin());
+  if (Z_history.size() > max_history_size) Z_history.erase(Z_history.begin());
+}
+
+
 void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 {
   AppState* state = static_cast<AppState*>(glfwGetWindowUserPointer(window));
@@ -44,13 +85,25 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
     ImGui::DockBuilderRemoveNode(dockspaceId);
     ImGui::DockBuilderAddNode(dockspaceId, dockspaceFlags | ImGuiDockNodeFlags_DockSpace);
     ImGui::DockBuilderSetNodeSize(dockspaceId, viewport->Size);
-    auto rightId = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Right, 0.3f, nullptr, &dockspaceId);
 
-    ImGui::DockBuilderDockWindow("Scene", dockspaceId);
+    ImGuiID mainId = dockspaceId;
+    ImGuiID rightId = ImGui::DockBuilderSplitNode(mainId, ImGuiDir_Right, 0.3f, nullptr, &mainId);
+
+    ImGuiID bottomId = ImGui::DockBuilderSplitNode(mainId, ImGuiDir_Down, 0.3f, nullptr, &mainId);
+    ImGuiID midId = ImGui::DockBuilderSplitNode(mainId, ImGuiDir_Down, 0.28f, nullptr, &mainId);
+    ImGuiID topId = mainId;
+
+    ImGuiID rotationId = midId;
+    ImGuiID accelerationId = ImGui::DockBuilderSplitNode(midId, ImGuiDir_Right, 0.5f, nullptr, &rotationId);
+
+    ImGui::DockBuilderDockWindow("Scene", topId);
+    ImGui::DockBuilderDockWindow("Rotation", rotationId);
+    ImGui::DockBuilderDockWindow("Acceleration", accelerationId);
     ImGui::DockBuilderDockWindow("Settings", rightId);
 
     ImGui::DockBuilderFinish(dockspaceId);
   }
+
   ImGui::End();
 
   ImGui::Begin("Scene");
@@ -103,6 +156,51 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
   }
 
   ImGui::End();
+
+  updateRotationData(state);
+  updateAccelerationData(state);
+
+  ImGui::Begin("Rotation");
+
+  availSize = ImGui::GetContentRegionAvail();
+
+  if (ImPlot::BeginPlot("Rotation")) {
+    ImPlot::SetupAxisLimits(ImAxis_X1, 0, max_history_size, ImGuiCond_Always);
+    ImPlot::SetupAxisLimits(ImAxis_Y1, -180, 180, ImGuiCond_Always);
+
+    int n = (int)pitch_history.size();
+    if (n > 0) {
+      std::vector<float> x_vals(n);
+      std::iota(x_vals.begin(), x_vals.end(), 0);
+
+      ImPlot::PlotLine("Pitch", x_vals.data(), pitch_history.data(), n);
+      ImPlot::PlotLine("Yaw", x_vals.data(), yaw_history.data(), n);
+      ImPlot::PlotLine("Roll", x_vals.data(), roll_history.data(), n);
+    }
+    ImPlot::EndPlot();
+  }
+
+  ImGui::End();
+
+  ImGui::Begin("Acceleration");
+
+  if (ImPlot::BeginPlot("Acceleration")) {
+    ImPlot::SetupAxisLimits(ImAxis_X1, 0, max_history_size, ImGuiCond_Always);
+    ImPlot::SetupAxisLimits(ImAxis_Y1, -180, 180, ImGuiCond_Always);
+
+    int n = (int)X_history.size();
+    if (n > 0) {
+      std::vector<float> x_vals(n);
+      std::iota(x_vals.begin(), x_vals.end(), 0);
+
+      ImPlot::PlotLine("X", x_vals.data(), X_history.data(), n);
+      ImPlot::PlotLine("Y", x_vals.data(), Y_history.data(), n);
+      ImPlot::PlotLine("Z", x_vals.data(), Z_history.data(), n);
+    }
+    ImPlot::EndPlot();
+  }
+
+  ImGui::End();
 }
 
 void uiRender()
@@ -115,6 +213,7 @@ void uiInit(GLFWwindow* window)
 {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
+  ImPlot::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
   (void)io;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -140,4 +239,5 @@ void uiDestroy()
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
+  ImPlot::DestroyContext();
 }
