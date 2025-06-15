@@ -38,9 +38,9 @@ void updateRotationData(AppState* state) {
 
 void updateAccelerationData(AppState* state) {
   glm::vec3 acc = glm::vec3(state->objectAcceleration);
-  float X = glm::degrees(acc.x);
-  float Y = glm::degrees(acc.y);
-  float Z = glm::degrees(acc.z);
+  float X = acc.x;
+  float Y = acc.y;
+  float Z = acc.z;
 
   X_history.push_back(X);
   Y_history.push_back(Y);
@@ -50,7 +50,6 @@ void updateAccelerationData(AppState* state) {
   if (Y_history.size() > max_history_size) Y_history.erase(Y_history.begin());
   if (Z_history.size() > max_history_size) Z_history.erase(Z_history.begin());
 }
-
 
 void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 {
@@ -164,7 +163,7 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 
   availSize = ImGui::GetContentRegionAvail();
 
-  if (ImPlot::BeginPlot("Rotation")) {
+  if (ImPlot::BeginPlot("Rotation in degrees")) {
     ImPlot::SetupAxisLimits(ImAxis_X1, 0, max_history_size, ImGuiCond_Always);
     ImPlot::SetupAxisLimits(ImAxis_Y1, -180, 180, ImGuiCond_Always);
 
@@ -184,9 +183,9 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 
   ImGui::Begin("Acceleration");
 
-  if (ImPlot::BeginPlot("Acceleration")) {
+  if (ImPlot::BeginPlot("Acceleration in gees")) {
     ImPlot::SetupAxisLimits(ImAxis_X1, 0, max_history_size, ImGuiCond_Always);
-    ImPlot::SetupAxisLimits(ImAxis_Y1, -180, 180, ImGuiCond_Always);
+    ImPlot::SetupAxisLimits(ImAxis_Y1, -2, 2, ImGuiCond_Always);
 
     int n = (int)X_history.size();
     if (n > 0) {
