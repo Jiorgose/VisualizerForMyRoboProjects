@@ -99,6 +99,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>IDI_ICON1=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -118,6 +121,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>IDI_ICON1=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -135,6 +141,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>IDI_ICON1=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -154,6 +163,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>IDI_ICON1=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Dependencies\glad\glad.c" />
@@ -200,12 +212,19 @@
     <ClInclude Include="load.hpp" />
     <ClInclude Include="mouseMovement.hpp" />
     <ClInclude Include="render.hpp" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="ui.hpp" />
     <ClInclude Include="window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\x64\shaders\fragment.glsl" />
     <None Include="..\x64\shaders\vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VisualizerForMyRoboProjects.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\x64\Icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
