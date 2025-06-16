@@ -130,6 +130,18 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
     ImGui::Value("FPS: ", static_cast<float>(1.0 / state->dt));
   }
 
+  if (ImGui::CollapsingHeader("Serial Console", ImGuiCond_Once)) {
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 255));
+    ImGui::BeginChild("Console", ImVec2(0, 150), true, ImGuiWindowFlags_HorizontalScrollbar);
+
+    for (const auto& msg : state->messages) {
+      ImGui::Text("%s", msg.c_str());
+    }
+
+    ImGui::EndChild();
+    ImGui::PopStyleColor();
+  }
+
   if (ImGui::CollapsingHeader("Select Arduino", ImGuiTreeNodeFlags_DefaultOpen)) {
     if (ImGui::Button("Refresh Arduino Ports")) {
       scanForArduinoPorts(&autoSelect, &selectedPortIndex, &arduinoPorts);

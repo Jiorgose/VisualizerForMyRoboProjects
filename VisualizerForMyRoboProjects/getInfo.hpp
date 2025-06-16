@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <thread>
-#include <string>
 #include <glm.hpp>
 #include <regex>
 #include <sstream>

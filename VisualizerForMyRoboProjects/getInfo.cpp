@@ -75,6 +75,13 @@ SensorData parseQuatAndAccel(const std::string& str) {
 
   return data;
 }
+
+void logMessage(AppState* state, const std::string& msg) {
+  state->messages.push_back(msg);
+  if (state->messages.size() > 50) {
+    state->messages.erase(state->messages.begin());
+  }
+}
  
 void updateSerial(GLFWwindow* window) {
   if (!mainSerial) {
@@ -98,7 +105,8 @@ void updateSerial(GLFWwindow* window) {
         message = trim(message);
 
         if (!message.empty()) {
-          std::cout << "Received full message: " << message << std::endl;
+          logMessage(state, message);
+          //std::cout << "Received full message: " << message << std::endl;
           SensorData sensData = parseQuatAndAccel(message);
           state->objectRotation = sensData.quat;
           state->objectAcceleration = sensData.accel;

@@ -5,6 +5,7 @@
 #include <glm.hpp>
 #include <gtc/quaternion.hpp>
 #include <gtx/euler_angles.hpp>
+#include <string>
 
 #include <vector>
 
@@ -27,4 +28,6 @@ struct AppState {
   glm::vec3 objectPosition = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 objectAcceleration = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::quat objectRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+
+  std::vector<std::string> messages;
 };
