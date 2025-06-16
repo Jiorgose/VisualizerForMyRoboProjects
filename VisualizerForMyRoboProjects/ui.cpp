@@ -38,9 +38,9 @@ void updateRotationData(AppState* state) {
 
 void updateAccelerationData(AppState* state) {
   glm::vec3 acc = glm::vec3(state->objectAcceleration);
-  float X = acc.x;
-  float Y = acc.y;
-  float Z = acc.z;
+  float X = acc.x * 9.81f;
+  float Y = acc.y * 9.81f;
+  float Z = acc.z * 9.81f;
 
   X_history.push_back(X);
   Y_history.push_back(Y);
@@ -183,9 +183,9 @@ void uiUpdate(GLuint textureId, GLuint fragmentShader, GLFWwindow* window)
 
   ImGui::Begin("Acceleration");
 
-  if (ImPlot::BeginPlot("Acceleration in gees")) {
+  if (ImPlot::BeginPlot("Acceleration in m/s^2")) {
     ImPlot::SetupAxisLimits(ImAxis_X1, 0, max_history_size, ImGuiCond_Always);
-    ImPlot::SetupAxisLimits(ImAxis_Y1, -2, 2, ImGuiCond_Always);
+    ImPlot::SetupAxisLimits(ImAxis_Y1, -15, 15, ImGuiCond_Always);
 
     int n = (int)X_history.size();
     if (n > 0) {
